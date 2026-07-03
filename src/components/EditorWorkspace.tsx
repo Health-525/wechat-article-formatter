@@ -180,16 +180,16 @@ function MarkdownToolbar({ onWrap, onInsert }: ToolbarProps) {
 export default function EditorWorkspace() {
   const [markdown, setMarkdown] = useState(() => {
     if (typeof window === "undefined") return demoMarkdown
-    const saved = localStorage.getItem("mopai-markdown")
+    const saved = sessionStorage.getItem("mopai-markdown")
     return saved && saved !== demoMarkdown ? saved : demoMarkdown
   })
   const [title, setTitle] = useState(() => {
     if (typeof window === "undefined") return "欢迎使用墨排"
-    return localStorage.getItem("mopai-title") || "欢迎使用墨排"
+    return sessionStorage.getItem("mopai-title") || "欢迎使用墨排"
   })
   const [activeTheme, setActiveTheme] = useState(() => {
     if (typeof window === "undefined") return "minimal-white"
-    const saved = localStorage.getItem("mopai-theme")
+    const saved = sessionStorage.getItem("mopai-theme")
     return saved && themes.some((t) => t.id === saved) ? saved : "minimal-white"
   })
   const [copied, setCopied] = useState(false)
@@ -235,12 +235,13 @@ export default function EditorWorkspace() {
     return () => document.removeEventListener("click", handleClick)
   }, [])
 
-  // Auto-save to localStorage
+  // Auto-save to sessionStorage so drafts are scoped to this tab/session
+  // and are not visible to the next user on the same device.
   useEffect(() => {
     const timer = setTimeout(() => {
-      localStorage.setItem("mopai-markdown", markdown)
-      localStorage.setItem("mopai-title", title)
-      localStorage.setItem("mopai-theme", activeTheme)
+      sessionStorage.setItem("mopai-markdown", markdown)
+      sessionStorage.setItem("mopai-title", title)
+      sessionStorage.setItem("mopai-theme", activeTheme)
       setSavedAt(new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }))
     }, 800)
     return () => clearTimeout(timer)

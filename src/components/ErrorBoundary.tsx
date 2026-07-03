@@ -24,9 +24,9 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   handleReset = () => {
-    localStorage.removeItem("mopai-markdown")
-    localStorage.removeItem("mopai-title")
-    localStorage.removeItem("mopai-theme")
+    sessionStorage.removeItem("mopai-markdown")
+    sessionStorage.removeItem("mopai-title")
+    sessionStorage.removeItem("mopai-theme")
     window.location.reload()
   }
 
