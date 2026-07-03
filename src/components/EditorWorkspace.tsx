@@ -586,6 +586,9 @@ export default function EditorWorkspace() {
           style={{ position: "relative", flexShrink: 0 }}
         >
           <button
+            aria-label="选择排版主题"
+            aria-haspopup="listbox"
+            aria-expanded={themeOpen}
             onClick={() => setThemeOpen(!themeOpen)}
             style={{
               display: "flex",
@@ -626,6 +629,8 @@ export default function EditorWorkspace() {
           {themeOpen && (
             <div
               id="theme-dropdown"
+              role="listbox"
+              aria-label="排版主题"
               style={{
                 position: "absolute",
                 top: "calc(100% + 4px)",
@@ -658,6 +663,8 @@ export default function EditorWorkspace() {
                   {cat.themes.map((theme) => (
                     <button
                       key={theme.id}
+                      role="option"
+                      aria-selected={activeTheme === theme.id}
                       onClick={() => {
                         setActiveTheme(theme.id)
                         setThemeOpen(false)
@@ -788,6 +795,23 @@ export default function EditorWorkspace() {
           {copied ? <Check size={15} /> : <Copy size={15} />}
           {copied ? "已复制" : "复制"}
         </button>
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          style={{
+            position: "absolute",
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: "hidden",
+            clip: "rect(0,0,0,0)",
+            whiteSpace: "nowrap",
+            border: 0,
+          }}
+        >
+          {copied ? "HTML 已复制到剪贴板" : ""}
+        </div>
       </div>
 
       {/* ═══ Editor + Preview Grid ═══ */}
@@ -1026,6 +1050,12 @@ export default function EditorWorkspace() {
       {/* Help Modal */}
       {showHelp && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="help-title"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setShowHelp(false)
+          }}
           style={{
             position: "fixed",
             inset: 0,
@@ -1053,7 +1083,7 @@ export default function EditorWorkspace() {
               color: "#fff",
             }}
           >
-            <h2 style={{ margin: "0 0 16px", fontSize: "20px" }}>欢迎使用墨排</h2>
+            <h2 id="help-title" style={{ margin: "0 0 16px", fontSize: "20px" }}>欢迎使用墨排</h2>
             <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "20px" }}>
               墨排是一款免费的 Markdown 转微信公众号排版工具。左侧编辑，右侧预览，一键复制即可粘贴到公众号编辑器。
             </p>
@@ -1089,6 +1119,12 @@ export default function EditorWorkspace() {
       {/* Shortcuts Modal */}
       {showShortcuts && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="shortcuts-title"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setShowShortcuts(false)
+          }}
           style={{
             position: "fixed",
             inset: 0,
@@ -1116,7 +1152,7 @@ export default function EditorWorkspace() {
               color: "#fff",
             }}
           >
-            <h2 style={{ margin: "0 0 16px", fontSize: "20px" }}>快捷键</h2>
+            <h2 id="shortcuts-title" style={{ margin: "0 0 16px", fontSize: "20px" }}>快捷键</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {[
                 ["复制 HTML", "Ctrl / Cmd + Shift + C"],
