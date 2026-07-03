@@ -65,8 +65,9 @@
 
 ### 📝 编辑器体验
 
-- **完整 Markdown 支持**：标题、段落、列表、表格、代码块、引用、图片、分隔线、链接。
+- **完整 Markdown 支持**：标题、段落、列表、表格、代码块、引用、图片、分隔线、链接、数学公式。
 - **可视化工具栏**：快速插入标题、粗体、斜体、引用、代码、链接、列表、表格、分隔线。
+- **LaTeX 数学公式**：支持 `$...$` 行内公式和 `$$...$$` 块级公式，基于 KaTeX 渲染。
 - **快捷键**：`Ctrl/Cmd + B` 加粗、`Ctrl/Cmd + I` 斜体、`Ctrl/Cmd + Shift + C` 复制 HTML。
 - **自动保存**：内容实时保存到浏览器本地，刷新不丢失。
 - **全屏编辑**：沉浸式写作模式。
@@ -131,6 +132,7 @@ npm run dev
 - **[Tailwind CSS 3](https://tailwindcss.com/)** — 原子化 CSS
 - **[Marked](https://marked.js.org/)** — Markdown 解析
 - **[highlight.js](https://highlightjs.org/)** — 代码高亮
+- **[KaTeX](https://katex.org/)** — 数学公式渲染
 - **[lucide-react](https://lucide.dev/)** — 图标库
 
 ---
@@ -144,6 +146,8 @@ src/
     ErrorBoundary.tsx        # 错误边界，防止渲染异常白屏
   utils/
     markdownParser.ts        # Markdown 解析 + 内联样式注入 + 剪贴板
+    mathRenderer.ts          # LaTeX 数学公式提取与渲染
+    katexCss.ts              # KaTeX 样式字符串（自动生成）
     themes.ts                # 12 套公众号排版主题
   App.tsx                    # 根组件
   main.tsx                   # React 入口
@@ -208,7 +212,9 @@ GitHub Pages 会自动从 `main` 分支根目录部署。
 - 💡 图片建议使用 **Base64 嵌入**，避免公众号外链失效。
 - 💡 代码块会自动高亮，支持多种编程语言。
 - 💡 表格会渲染成带样式的 HTML 表格。
+- 💡 数学公式使用 `$...$`（行内）或 `$$...$$`（块级）语法，基于 KaTeX 渲染。
 - 💡 所有样式均为 **内联样式**，可直接粘贴到公众号编辑器。
+- 💡 复制到微信公众号后，建议检查公式显示效果；如样式异常，可导出 HTML 文件备用。
 
 ---
 
