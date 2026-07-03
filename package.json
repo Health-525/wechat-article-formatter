@@ -2,6 +2,7 @@
   "name": "mopai",
   "private": true,
   "version": "0.1.0",
+  "description": "墨排 — 免费 Markdown 转微信公众号排版工具，支持 12 套精美主题、实时预览、一键复制。",
   "type": "module",
   "scripts": {
     "dev": "vite",

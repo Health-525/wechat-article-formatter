@@ -27,6 +27,16 @@
 
 ---
 
+## 🎯 适用场景
+
+- **公众号推文** — 技术、产品、运营、设计类长文一键排版
+- **技术博客转载** — 把 Markdown 博文转换成微信可读样式
+- **产品文档 / 教程** — 代码块、表格、图片清晰呈现
+- **课程讲义 / 知识分享** — 多主题适配不同内容调性
+- **企业内部周刊** — 统一品牌视觉，快速出稿
+
+---
+
 ## 📸 预览
 
 <p align="center">
@@ -131,17 +141,18 @@ npm run dev
 src/
   components/
     EditorWorkspace.tsx      # 主编辑器（编辑、预览、工具栏、主题）
-    Navigation.tsx           # 顶部导航
-    FullScreenMenu.tsx       # 全屏菜单
+    ErrorBoundary.tsx        # 错误边界，防止渲染异常白屏
   utils/
     markdownParser.ts        # Markdown 解析 + 内联样式注入 + 剪贴板
     themes.ts                # 12 套公众号排版主题
-  config.ts                  # 站点配置
   App.tsx                    # 根组件
   main.tsx                   # React 入口
   index.css                  # 全局样式
 public/
-  images/                    # 示例图片
+  favicon.ico                # 网站图标
+  og-image.png               # 社交分享卡片封面
+  apple-touch-icon.png       # iOS 主屏幕图标
+  images/demo-article.jpg    # 示例图片
 ```
 
 ---
@@ -165,6 +176,18 @@ git push origin main
 ```
 
 GitHub Pages 会自动从 `main` 分支根目录部署。
+
+---
+
+## 🚀 即将上线
+
+- [ ] 云端草稿同步 — 换设备也能继续写
+- [ ] 模板市场 — 一键套用热门排版模板
+- [ ] 团队协作 — 共享主题与草稿
+- [ ] 导出 PDF / 长图 — 多平台分发更灵活
+- [ ] 自定义主题 — 上传品牌色与字体配置
+
+如果你有想要的功能，欢迎提 [Issue](https://github.com/Health-525/wechat-article-formatter/issues/new/choose) 告诉我们！
 
 ---
 
@@ -197,6 +220,14 @@ GitHub Pages 会自动从 `main` 分支根目录部署。
 
 <div align="center">
 
-如果这个项目帮到了你，欢迎 ⭐ Star 支持一下！
+## 💖 喜欢墨排？
+
+如果这个项目帮到了你，欢迎 **⭐ Star**、**🍴 Fork** 或 **分享给朋友**！
+
+你的每一次传播，都是对我们最大的支持。
+
+<a href="https://github.com/Health-525/wechat-article-formatter/stargazers">
+  <img src="https://img.shields.io/github/stars/Health-525/wechat-article-formatter?style=social" alt="GitHub Stars">
+</a>
 
 </div>
