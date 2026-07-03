@@ -31,6 +31,12 @@
 
 <p align="center">
   <a href="https://health-525.github.io/wechat-article-formatter/">
+    <img src="docs/screenshot.png" alt="墨排编辑器预览" width="100%">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://health-525.github.io/wechat-article-formatter/">
     <img src="https://img.shields.io/badge/👆_点击访问在线演示-f25b29?style=flat-square" alt="Preview">
   </a>
 </p>
