@@ -1,236 +1,99 @@
-# 3D Gallery Frontend Template
+<div align="center">
 
-A config-driven 3D CSS room gallery website template. Features immersive CSS 3D perspective rooms with wall-mounted images, particle sculpture animations, fullscreen video sections, a 3x3 image gallery with lightbox, and a terminal-style ticker footer.
+# 墨排 — Markdown 转微信公众号排版工具
 
-## Features
+[![Live Demo](https://img.shields.io/badge/在线体验-墨排-f25b29?style=for-the-badge)](https://health-525.github.io/wechat-article-formatter/)
+[![GitHub](https://img.shields.io/badge/GitHub-仓库-181717?style=for-the-badge&logo=github)](https://github.com/Health-525/wechat-article-formatter)
 
-- CSS 3D room gallery with perspective transforms and mouse-tilt interaction
-- Multiple rooms with left/right arrow navigation and animated transitions
-- Three.js particle sculpture with simplex noise shader
-- Fullscreen video section with liquid glass overlay panel
-- Widescreen video section with typography overlay
-- 3x3 image gallery grid with click-to-lightbox (image + description)
-- Terminal-style ticker footer with GSAP-animated text sweep
-- Fullscreen navigation menu with GSAP entrance animations
-- Lenis smooth scrolling with GSAP ScrollTrigger integration
-- Dark theme with serif/sans/mono typography system
+**输入 Markdown，一键生成精美公众号排版。**
 
-## Tech Stack
+</div>
 
-- React 19 + TypeScript
-- Vite 7
-- Tailwind CSS 3
-- GSAP (ScrollTrigger, timeline animations)
-- Three.js (particle sculpture with custom shaders)
-- Lenis (smooth scroll)
-- CSS 3D Transforms (room gallery)
+## ✨ 在线体验
 
-## Quick Start
+👉 **[https://health-525.github.io/wechat-article-formatter/](https://health-525.github.io/wechat-article-formatter/)**
 
-1. Clone this repository
-2. Install dependencies: `npm install`
-3. Edit `src/config.ts` with your content
-4. Add images to `public/images/`
-5. Add videos to `public/videos/`
-6. Run dev server: `npm run dev`
-7. Build for production: `npm run build`
+无需注册、打开即用。左侧写 Markdown，右侧实时预览，满意后一键复制到微信公众号编辑器。
 
-## Configuration
+## 🚀 核心功能
 
-All content is configured in `src/config.ts`. Edit this file to customize your site.
+- **完整 Markdown 语法**：标题、段落、列表、表格、代码块、引用、图片、分隔线、链接等。
+- **12 套精选主题**：极简留白、灰调雅致、新中式、莫兰迪文艺、潮流先锋、赛博霓虹、杂志画报、法式浪漫、温暖治愈、清新自然、商务蓝调、党政红金。
+- **实时预览**：边写边看，排版效果一目了然。
+- **Markdown 工具栏**：快速插入标题、粗体、斜体、引用、代码、链接、列表、表格、分隔线。
+- **一键复制/导出**：复制带内联样式的 HTML 到公众号，或导出 `.html` 文件。
+- **图片三种插入方式**：点击上传、粘贴截图、拖拽文件。图片自动以 Base64 嵌入。
+- **文件导入**：支持 `.md`、`.markdown`、`.txt`。
+- **自动保存**：编辑内容自动保存到浏览器本地，刷新不丢失。
+- **全屏编辑**：沉浸式写作模式。
+- **快捷键支持**：复制、加粗、斜体、快捷键帮助面板。
 
-### Site Config
+## 🛠 技术栈
 
-```typescript
-export const siteConfig: SiteConfig = {
-  language: "",      // Language code (e.g. "en", "zh-CN")
-  brandName: "",     // Brand name displayed in top-left nav (split into animated letters)
-}
-```
+- **React 19** + **TypeScript**
+- **Vite**
+- **Tailwind CSS**
+- **Marked**（Markdown 解析）
+- **highlight.js**（代码高亮）
+- **lucide-react**（图标）
 
-### Navigation Config
+## 📦 本地开发
 
-```typescript
-export const navigationConfig: NavigationConfig = {
-  menuLabel: "",                 // Text on the menu button (e.g. "MENU")
-  closeLabel: "",                // Text on the close button in fullscreen menu (e.g. "CLOSE")
-  fullscreenMenuLinks: [],       // Array of { label: string, target: string }
-  menuSideInfo: [],              // Array of strings shown on right side of menu
-}
-```
-
-### Hero Room Gallery Config
-
-```typescript
-export const heroConfig: HeroConfig = {
-  mainTitle: "",     // Large title at bottom of hero (e.g. "A Room of One's Own")
-  rooms: [],         // Array of RoomConfig objects (see below)
-  metaLines: [],     // Array of meta text lines below subtitle
-}
-```
-
-Each room in the `rooms` array:
-
-```typescript
-{
-  name: "",                    // Room name shown as subtitle
-  className: "room--waves",    // CSS class that controls wall color
-  theme: "dark",               // "light" or "dark" — controls text color
-  images: {
-    back: [""],                // Back wall image path (1 image)
-    left: [""],                // Left wall image path (1 image)
-    right: [""],               // Right wall image path (1 image)
-  },
-}
-```
-
-Available className values and their wall colors:
-- `room--waves` — deep red (#8b2525)
-- `room--monk` — warm beige (#d5d0c8)
-- `room--lighthouse` — navy blue (#1a3a5c)
-- `room--orlando` — gold (#c8a82e)
-
-### Particle Sculpture Config
-
-```typescript
-export const particleConfig: ParticleConfig = {
-  sectionLabel: "",    // Section label (e.g. "02 / CONSCIOUSNESS")
-  title: "",           // Section heading
-  paragraphs: [],      // Array of paragraph HTML strings (supports <em> tags)
-  quote: "",           // Blockquote text
-}
-```
-
-### Lighthouse Video Config
-
-```typescript
-export const lighthouseVideoConfig: LighthouseVideoConfig = {
-  sectionLabel: "",    // Label inside the glass panel
-  dataPoints: [],      // Array of data point strings shown in the panel
-  description: "",     // Italic quote text below the divider
-  videoPath: "",       // Path to video file (e.g. "videos/lighthouse.mp4")
-}
-```
-
-### Waves Video Config
-
-```typescript
-export const wavesVideoConfig: WavesVideoConfig = {
-  sectionLabel: "",    // Section label above video (e.g. "05 / THE WAVES")
-  title: "",           // Large text overlay on video
-  ctaText: "",         // Call-to-action text (e.g. "ENTER THE EXHIBITION")
-  videoPath: "",       // Path to video file (e.g. "videos/waves.mp4")
-}
-```
-
-### Gallery Config
-
-```typescript
-export const galleryConfig: GalleryConfig = {
-  sectionLabel: "",        // Section label (e.g. "04 / ARCHIVE")
-  sectionTitle: "",        // Section title (e.g. "The Waves")
-  items: [],               // Array of { src, caption, description }
-  lightboxCloseHint: "",   // Close hint text in lightbox
-}
-```
-
-### Footer Config
-
-```typescript
-export const footerConfig: FooterConfig = {
-  linkColumns: [],     // Array of { heading: string, links: string[] }
-  tickerWords: [],     // Array of words for terminal ticker effect
-  copyright: "",       // Copyright text
-}
-```
-
-## Required Images
-
-### Room Images (3 per room, 4 rooms = 12 images)
-
-Place in `public/images/rooms/`:
-
-Each room needs exactly 3 images:
-- Back wall image (landscape, 1200x800 recommended)
-- Left wall image (landscape, 1200x800 recommended)
-- Right wall image (landscape, 1200x800 recommended)
-
-### Gallery Images (9 images for 3x3 grid)
-
-Place in `public/images/gallery/`:
-
-- 9 portrait-oriented images (3:4 aspect ratio, 800x1067 recommended)
-- Each image needs a caption and description in config
-
-## Required Videos
-
-Place in `public/videos/`:
-
-- Lighthouse video (landscape, 1920x1080 recommended, MP4 format)
-- Waves video (landscape, 16:9 aspect ratio, 1920x1080 recommended, MP4 format)
-
-## Design
-
-**Colors:**
-- Background: #0a0a0b (void/dark)
-- Light section: #f5f4f0 (alabaster)
-- Accent: #f25b29 (amber/orange)
-- Room walls: #8b2525 (waves), #d5d0c8 (monk), #1a3a5c (lighthouse), #c8a82e (orlando)
-
-**Fonts:**
-- Serif: Instrument Serif (titles, headings)
-- Sans: Inter 300/400 (body text, labels)
-- Mono: Source Code Pro 400 (data points, ticker)
-
-**Animations:**
-- GSAP ScrollTrigger entrance animations on all sections
-- CSS 3D room perspective with mouse-tilt interaction
-- Three.js particle sculpture with simplex noise deformation
-- Terminal ticker with GSAP tween sweep reveal/erase cycle
-- Logo letter rotation on hover
-- Fullscreen menu GSAP timeline open/close
-
-## Build
+源码位于 `source` 分支。
 
 ```bash
+# 切换到源码分支
+git checkout source
+
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
 npm run build
+
+# 代码检查
+npm run lint
 ```
 
-Output in `dist/` folder ready to deploy.
+## 🚀 部署 workflow
 
-## Project Structure
+本仓库使用 `main` 分支作为 GitHub Pages 部署分支，`source` 分支保存源码。
 
-```
-src/
-  config.ts              # All content configuration
-  App.tsx                # Root component with section layout
-  main.tsx               # React entry point
-  index.css              # Global styles, CSS 3D room styles
-  components/
-    Navigation.tsx       # Fixed top nav with brand + menu button
-    FullScreenMenu.tsx   # Fullscreen overlay menu
-  sections/
-    HeroRoomGallery.tsx  # CSS 3D room gallery hero
-    ParticleSculpture.tsx # Three.js particle + editorial text
-    LighthouseVideo.tsx  # Fullscreen video with glass panel
-    ImageGallery.tsx     # 3x3 grid gallery with lightbox
-    WavesVideo.tsx       # Widescreen video with text overlay
-    FooterTicker.tsx     # Footer links + terminal ticker
-  hooks/
-    useLenis.ts          # Smooth scroll hook
-public/
-  images/                # User images go here
-  videos/                # User videos go here
+```bash
+# 1. 在 source 分支开发、构建
+git checkout source
+npm install
+npm run build
+
+# 2. 将 dist 产物推送到 main 分支（示例）
+git checkout main
+cp -r dist/* .
+git add -A
+git commit -m "deploy: update site"
+git push origin main
 ```
 
-## Notes
+## 📁 分支说明
 
-- Do not modify component files unless fixing bugs
-- All content goes in `src/config.ts`
-- Images go in `public/images/` (rooms/ and gallery/ subdirectories)
-- Videos go in `public/videos/`
-- Room CSS classes (room--waves, room--monk, etc.) control wall colors in CSS
-- The `theme` field on rooms controls whether overlay text is light or dark
-- The `paragraphs` field in particleConfig supports HTML (e.g. `<em>` for italics)
-- Gallery displays in a 3x3 grid; provide exactly 9 items for best layout
-- Ticker words should be short, uppercase words (5-10 characters each)
+| 分支 | 用途 |
+|------|------|
+| `main` | GitHub Pages 部署分支，只包含构建产物 |
+| `source` | 源码分支，包含 React + TypeScript 源码 |
+
+## 📝 使用提示
+
+- 图片建议使用 **Base64 嵌入**，避免公众号外链失效。
+- 代码块会自动高亮，支持多种编程语言。
+- 表格会渲染成带样式的 HTML 表格。
+- 所有样式均为 **内联样式**，可直接粘贴到公众号编辑器。
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request。请在 `source` 分支上进行开发。
+
+## 📄 许可证
+
+MIT License

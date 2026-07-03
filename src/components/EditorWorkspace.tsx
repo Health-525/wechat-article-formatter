@@ -11,6 +11,19 @@ import {
   ChevronDown,
   Eye,
   Code2,
+  Bold,
+  Italic,
+  Heading,
+  Quote,
+  Code,
+  Link,
+  List,
+  ListOrdered,
+  Table,
+  Minus,
+  HelpCircle,
+  Download,
+  Keyboard,
 } from "lucide-react"
 import { themes, themeCategories } from "../utils/themes"
 import {
@@ -96,16 +109,98 @@ function TooltipBtn({
   )
 }
 
+// ─── Markdown toolbar component ───
+interface ToolbarProps {
+  onWrap: (before: string, after: string, defaultText?: string) => void
+  onInsert: (text: string) => void
+}
+
+function MarkdownToolbar({ onWrap, onInsert }: ToolbarProps) {
+  const tools = [
+    { icon: Heading, label: "标题", action: () => onWrap("## ", "") },
+    { icon: Bold, label: "粗体", action: () => onWrap("**", "**") },
+    { icon: Italic, label: "斜体", action: () => onWrap("*", "*") },
+    { icon: Quote, label: "引用", action: () => onWrap("> ", "") },
+    { icon: Code, label: "代码", action: () => onWrap("`", "`") },
+    { icon: Link, label: "链接", action: () => onWrap("[", "](https://)", "链接文字") },
+    { icon: List, label: "列表", action: () => onWrap("- ", "") },
+    { icon: ListOrdered, label: "序号", action: () => onWrap("1. ", "") },
+    { icon: Table, label: "表格", action: () => onInsert("\n| 表头1 | 表头2 |\n|------|------|\n| 内容1 | 内容2 |\n") },
+    { icon: Minus, label: "分隔线", action: () => onInsert("\n---\n") },
+  ]
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "2px",
+        padding: "4px 8px",
+        background: "#0d0d0f",
+        borderBottom: "1px solid rgba(255,255,255,0.05)",
+        flexWrap: "wrap",
+        flexShrink: 0,
+      }}
+    >
+      {tools.map((tool) => (
+        <button
+          key={tool.label}
+          aria-label={tool.label}
+          onClick={tool.action}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "28px",
+            height: "28px",
+            color: "rgba(255,255,255,0.55)",
+            background: "transparent",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(255,255,255,0.08)"
+            e.currentTarget.style.color = "#fff"
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent"
+            e.currentTarget.style.color = "rgba(255,255,255,0.55)"
+          }}
+          title={tool.label}
+        >
+          <tool.icon size={15} />
+        </button>
+      ))}
+    </div>
+  )
+}
+
 export default function EditorWorkspace() {
-  const [markdown, setMarkdown] = useState(demoMarkdown)
-  const [title, setTitle] = useState("欢迎使用墨排")
-  const [activeTheme, setActiveTheme] = useState("minimal-white")
+  const [markdown, setMarkdown] = useState(() => {
+    if (typeof window === "undefined") return demoMarkdown
+    const saved = localStorage.getItem("mopai-markdown")
+    return saved && saved !== demoMarkdown ? saved : demoMarkdown
+  })
+  const [title, setTitle] = useState(() => {
+    if (typeof window === "undefined") return "欢迎使用墨排"
+    return localStorage.getItem("mopai-title") || "欢迎使用墨排"
+  })
+  const [activeTheme, setActiveTheme] = useState(() => {
+    if (typeof window === "undefined") return "minimal-white"
+    const saved = localStorage.getItem("mopai-theme")
+    return saved && themes.some((t) => t.id === saved) ? saved : "minimal-white"
+  })
   const [copied, setCopied] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit")
   const [themeOpen, setThemeOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [savedAt, setSavedAt] = useState<string | null>(null)
+  const [showHelp, setShowHelp] = useState(false)
+  const [showShortcuts, setShowShortcuts] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
@@ -139,6 +234,19 @@ export default function EditorWorkspace() {
     document.addEventListener("click", handleClick)
     return () => document.removeEventListener("click", handleClick)
   }, [])
+
+  // Auto-save to localStorage
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      localStorage.setItem("mopai-markdown", markdown)
+      localStorage.setItem("mopai-title", title)
+      localStorage.setItem("mopai-theme", activeTheme)
+      setSavedAt(new Date().toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }))
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [markdown, title, activeTheme])
+
+
 
   const activeThemeData =
     themes.find((t) => t.id === activeTheme) || themes[0]
@@ -284,18 +392,6 @@ export default function EditorWorkspace() {
     }
   }, [previewHtml])
 
-  // Keyboard shortcut: Ctrl/Cmd + Shift + C to copy
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "c") {
-        e.preventDefault()
-        handleCopy()
-      }
-    }
-    document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [handleCopy])
-
   const handleClear = useCallback(() => {
     setMarkdown("")
     setTitle("")
@@ -305,6 +401,78 @@ export default function EditorWorkspace() {
     setMarkdown(demoMarkdown)
     setTitle("欢迎使用墨排")
   }, [])
+
+  // ─── Toolbar actions ───
+  const wrapSelection = useCallback(
+    (before: string, after: string, defaultText: string = "") => {
+      const textarea = textareaRef.current
+      if (!textarea) return
+      const start = textarea.selectionStart
+      const end = textarea.selectionEnd
+      const selected = markdown.substring(start, end) || defaultText
+      const replacement = before + selected + after
+      const newValue = markdown.substring(0, start) + replacement + markdown.substring(end)
+      setMarkdown(newValue)
+      setTimeout(() => {
+        textarea.focus()
+        const newPos = start + replacement.length - after.length
+        textarea.setSelectionRange(newPos, newPos)
+      }, 0)
+    },
+    [markdown]
+  )
+
+  const insertText = useCallback(
+    (text: string) => {
+      const textarea = textareaRef.current
+      if (!textarea) return
+      const start = textarea.selectionStart
+      const newValue = markdown.substring(0, start) + text + markdown.substring(start)
+      setMarkdown(newValue)
+      setTimeout(() => {
+        textarea.focus()
+        const newPos = start + text.length
+        textarea.setSelectionRange(newPos, newPos)
+      }, 0)
+    },
+    [markdown]
+  )
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.shiftKey && e.key.toLowerCase() === "c") {
+          e.preventDefault()
+          handleCopy()
+        } else if (e.key.toLowerCase() === "b") {
+          e.preventDefault()
+          wrapSelection("**", "**")
+        } else if (e.key.toLowerCase() === "i") {
+          e.preventDefault()
+          wrapSelection("*", "*")
+        } else if (e.key === "?") {
+          e.preventDefault()
+          setShowShortcuts(true)
+        }
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener("keydown", handleKeyDown)
+  }, [handleCopy, wrapSelection])
+
+  // ─── Export HTML file ───
+  const handleExportHtml = useCallback(() => {
+    const blob = new Blob([previewHtml], { type: "text/html;charset=utf-8" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `${title || "untitled"}.html`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, [previewHtml, title])
 
   return (
     <section
@@ -403,6 +571,9 @@ export default function EditorWorkspace() {
             </TooltipBtn>
             <TooltipBtn label="清空" onClick={handleClear} danger>
               <Trash2 size={15} />
+            </TooltipBtn>
+            <TooltipBtn label="导出 HTML" onClick={handleExportHtml}>
+              <Download size={15} />
             </TooltipBtn>
           </>
         )}
@@ -546,6 +717,20 @@ export default function EditorWorkspace() {
 
         <VDiv />
 
+        {/* Help & shortcuts */}
+        {!isMobile && (
+          <>
+            <TooltipBtn label="快捷键" onClick={() => setShowShortcuts(true)}>
+              <Keyboard size={15} />
+            </TooltipBtn>
+            <TooltipBtn label="帮助" onClick={() => setShowHelp(true)}>
+              <HelpCircle size={15} />
+            </TooltipBtn>
+          </>
+        )}
+
+        <VDiv />
+
         {/* Fullscreen toggle */}
         <button
           aria-label={isFullscreen ? "退出全屏" : "全屏编辑"}
@@ -634,6 +819,9 @@ export default function EditorWorkspace() {
             minHeight: 0,
           }}
         >
+          {/* Markdown toolbar */}
+          {!isMobile && <MarkdownToolbar onWrap={wrapSelection} onInsert={insertText} />}
+
           {/* Editor sub-header */}
           <div
             style={{
@@ -662,11 +850,11 @@ export default function EditorWorkspace() {
               style={{
                 fontFamily: "var(--font-sans)",
                 fontSize: "11px",
-                color: "var(--color-metal-dark)",
+                color: savedAt ? "#5a8a5a" : "var(--color-metal-dark)",
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              {wordCount}
+              {savedAt ? `已保存 ${savedAt} · ${wordCount}` : wordCount}
               <span style={{ marginLeft: "2px" }}>字</span>
             </span>
           </div>
@@ -831,6 +1019,143 @@ export default function EditorWorkspace() {
               )}
             </button>
           ))}
+
+        </div>
+      )}
+
+      {/* Help Modal */}
+      {showHelp && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            background: "rgba(10,10,11,0.85)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px",
+          }}
+          onClick={() => setShowHelp(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#1c1c1f",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "12px",
+              maxWidth: "520px",
+              width: "100%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              padding: "28px",
+              color: "#fff",
+            }}
+          >
+            <h2 style={{ margin: "0 0 16px", fontSize: "20px" }}>欢迎使用墨排</h2>
+            <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "20px" }}>
+              墨排是一款免费的 Markdown 转微信公众号排版工具。左侧编辑，右侧预览，一键复制即可粘贴到公众号编辑器。
+            </p>
+            <h3 style={{ fontSize: "14px", marginBottom: "10px" }}>快速上手</h3>
+            <ol style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.8, paddingLeft: "20px", marginBottom: "20px" }}>
+              <li>在左侧输入或导入 Markdown 内容</li>
+              <li>从顶部主题下拉框选择喜欢的排版风格</li>
+              <li>点击右上角「复制」按钮，粘贴到公众号编辑器</li>
+            </ol>
+            <h3 style={{ fontSize: "14px", marginBottom: "10px" }}>图片支持</h3>
+            <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "20px" }}>
+              支持点击上传、粘贴截图、拖拽文件三种方式插入图片。图片会自动以 Base64 形式嵌入，无需额外图床。
+            </p>
+            <button
+              onClick={() => setShowHelp(false)}
+              style={{
+                marginTop: "8px",
+                padding: "8px 20px",
+                background: "#f25b29",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: 600,
+              }}
+            >
+              知道了
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Shortcuts Modal */}
+      {showShortcuts && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 9999,
+            background: "rgba(10,10,11,0.85)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px",
+          }}
+          onClick={() => setShowShortcuts(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#1c1c1f",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "12px",
+              maxWidth: "420px",
+              width: "100%",
+              maxHeight: "80vh",
+              overflow: "auto",
+              padding: "28px",
+              color: "#fff",
+            }}
+          >
+            <h2 style={{ margin: "0 0 16px", fontSize: "20px" }}>快捷键</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {[
+                ["复制 HTML", "Ctrl / Cmd + Shift + C"],
+                ["加粗", "Ctrl / Cmd + B"],
+                ["斜体", "Ctrl / Cmd + I"],
+                ["全屏编辑", "点击右上角按钮"],
+              ].map(([action, key]) => (
+                <div key={action} style={{ display: "flex", justifyContent: "space-between" }}>
+                  <span style={{ color: "rgba(255,255,255,0.7)" }}>{action}</span>
+                  <kbd
+                    style={{
+                      background: "rgba(255,255,255,0.1)",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "12px",
+                    }}
+                  >
+                    {key}
+                  </kbd>
+                </div>
+              ))}
+            </div>
+            <button
+              onClick={() => setShowShortcuts(false)}
+              style={{
+                marginTop: "24px",
+                padding: "8px 20px",
+                background: "#f25b29",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontWeight: 600,
+              }}
+            >
+              关闭
+            </button>
+          </div>
         </div>
       )}
     </section>
