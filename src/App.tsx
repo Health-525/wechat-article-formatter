@@ -1,4 +1,3 @@
-import Navigation from "./components/Navigation"
 import EditorWorkspace from "./components/EditorWorkspace"
 
 function App() {
@@ -12,10 +11,7 @@ function App() {
         overflow: "hidden",
       }}
     >
-      <Navigation />
-      <div style={{ flex: 1, minHeight: 0, marginTop: "44px" }}>
-        <EditorWorkspace />
-      </div>
+      <EditorWorkspace />
     </div>
   )
 }
