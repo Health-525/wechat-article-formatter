@@ -1,0 +1,38 @@
+name: 功能建议
+ description: 为墨排提出新功能或改进建议
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        欢迎提出建议！请描述清楚功能场景和预期效果。
+  - type: textarea
+    id: problem
+    attributes:
+      label: 问题或痛点
+      description: 这个功能解决了什么问题？
+      placeholder: 目前复制到公众号后，代码块没有行号，技术文章阅读不方便……
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: 期望的解决方案
+      description: 描述你希望墨排如何支持这个功能。
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 替代方案
+      description: 你是否考虑过其他实现方式？
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: 补充说明
+      description: 任何其他上下文、截图或参考链接。
+    validations:
+      required: false
