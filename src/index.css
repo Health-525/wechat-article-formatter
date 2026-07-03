@@ -1,0 +1,637 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-void: #0a0a0b;
+    --color-alabaster: #f5f4f0;
+    --color-stone: #e8e8e4;
+    --color-amber: #f25b29;
+    --color-phosphor: #5c2615;
+    --color-metal-light: #e6e7e9;
+    --color-metal-mid: #b0b2b5;
+    --color-metal-dark: #7a7c7f;
+    --color-main-text: #141414;
+    --color-inverse-text: #ffffff;
+    --page-padding: clamp(1.5rem, 5vw, 4rem);
+    --font-serif: 'Instrument Serif', Georgia, serif;
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'Source Code Pro', monospace;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-void);
+    color: var(--color-inverse-text);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+/* ============================
+   CSS 3D Room Gallery
+   ============================ */
+
+.archive-container {
+  position: relative;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  perspective: 2000px;
+  background: var(--color-void);
+}
+
+.archive-scroller {
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out;
+}
+
+.room {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vw;
+  height: 100vh;
+  margin: -50vh 0 0 -50vw;
+  pointer-events: none;
+  opacity: 0;
+  transform-style: preserve-3d;
+}
+
+.room--current {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.room__side {
+  position: absolute;
+  display: flex;
+  align-items: center;
+}
+
+.room__side--back {
+  width: 100vw;
+  height: 100vh;
+  transform: translate3d(0, 0, -4000px) rotate3d(1, 0, 0, 0.1deg);
+  justify-content: center;
+}
+
+.room__side--right {
+  width: 4000px;
+  height: 100vh;
+  right: 0;
+  justify-content: flex-end;
+  transform: rotate3d(0, 1, 0, -90.03deg);
+  transform-origin: 100% 50%;
+}
+
+.room__side--left {
+  width: 4000px;
+  height: 100vh;
+  left: 0;
+  justify-content: flex-start;
+  transform: rotate3d(0, 1, 0, 90deg);
+  transform-origin: 0 50%;
+}
+
+.room__side--top {
+  width: 100vw;
+  height: 4000px;
+  bottom: 100%;
+  transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 4000px, 0);
+  transform-origin: 50% 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.1) 100%
+  ) !important;
+  backdrop-filter: blur(1px);
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+}
+
+.room__side--bottom {
+  width: 100vw;
+  height: 4000px;
+  top: 100%;
+  transform: rotate3d(1, 0, 0, 90deg) translate3d(0, -4000px, 0);
+  transform-origin: 50% 0%;
+}
+
+.room__side img {
+  max-width: 40%;
+  max-height: 60%;
+  transform: translate3d(0, 0, 10px);
+  backface-visibility: hidden;
+  object-fit: cover;
+}
+
+.room__side--back img {
+  margin: 0 5%;
+}
+
+.room__side--left img {
+  margin: 0 0 0 25%;
+}
+
+.room__side--right img {
+  margin: 0 25% 0 0;
+}
+
+/* Wall edge lines — visible seams between walls */
+.room__side--back {
+  border-left: 2px solid rgba(0, 0, 0, 0.4);
+  border-right: 2px solid rgba(0, 0, 0, 0.4);
+  border-top: 2px solid rgba(0, 0, 0, 0.35);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+.room__side--left {
+  border-right: 2px solid rgba(0, 0, 0, 0.4);
+  border-top: 2px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+}
+.room__side--right {
+  border-left: 2px solid rgba(0, 0, 0, 0.4);
+  border-top: 2px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+}
+
+/* Room wall colors */
+.room--monk .room__side { background: #d5d0c8; }
+.room--lighthouse .room__side { background: #1a3a5c; }
+.room--orlando .room__side { background: #c8a82e; }
+.room--waves .room__side { background: #8b2525; }
+
+/* Archive content overlay */
+.archive-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 8vh;
+}
+
+.archive-content[data-theme="light"] .archive-title,
+.archive-content[data-theme="light"] .archive-subtitle,
+.archive-content[data-theme="light"] .archive-meta {
+  color: #141414;
+}
+
+.archive-content[data-theme="dark"] .archive-title,
+.archive-content[data-theme="dark"] .archive-subtitle,
+.archive-content[data-theme="dark"] .archive-meta {
+  color: #ffffff;
+}
+
+.archive-title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-align: center;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  transition: color 0.3s ease;
+}
+
+.archive-subtitle {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  opacity: 0.7;
+  margin-top: 0.75rem;
+  transition: opacity 0.2s ease, color 0.3s ease;
+}
+
+.archive-meta {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  margin-top: 1.5rem;
+  text-align: center;
+  line-height: 2.2;
+  transition: color 0.3s ease;
+}
+
+/* Navigation arrows */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 10;
+  pointer-events: auto;
+  color: #ffffff;
+  opacity: 0.6;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.nav-arrow:hover {
+  opacity: 1;
+}
+
+.nav-arrow--left {
+  left: 2rem;
+}
+
+.nav-arrow--left:hover {
+  transform: translateY(-50%) translateX(-4px);
+}
+
+.nav-arrow--right {
+  right: 2rem;
+}
+
+.nav-arrow--right:hover {
+  transform: translateY(-50%) translateX(4px);
+}
+
+/* ============================
+   Liquid Glass Panel
+   ============================ */
+
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(2px) saturate(140%);
+  -webkit-backdrop-filter: blur(2px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  mask: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 100%);
+  pointer-events: none;
+}
+
+/* ============================
+   Section Label
+   ============================ */
+
+.section-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-metal-dark);
+  line-height: 1;
+}
+
+/* ============================
+   Ticker Line
+   ============================ */
+
+.ticker-line {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-inverse-text);
+  letter-spacing: 0.08em;
+}
+
+/* ============================
+   Mobile Responsive
+   ============================ */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+  :root {
+    --page-padding: 1rem;
+  }
+
+  .archive-title {
+    font-size: clamp(2rem, 10vw, 3rem) !important;
+  }
+
+  .archive-subtitle {
+    font-size: 12px !important;
+    letter-spacing: 0.15em !important;
+  }
+
+  .archive-meta {
+    font-size: 11px !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .nav-arrow {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .nav-arrow--left {
+    left: 1rem !important;
+  }
+
+  .nav-arrow--right {
+    right: 1rem !important;
+  }
+
+  .room__side img {
+    max-width: 60% !important;
+    max-height: 50% !important;
+  }
+}
+
+/* Phone */
+@media (max-width: 480px) {
+  .archive-title {
+    font-size: 2.2rem !important;
+  }
+
+  .archive-subtitle {
+    font-size: 11px !important;
+  }
+
+  .nav-arrow {
+    display: none !important;
+  }
+
+  .room__side img {
+    max-width: 70% !important;
+    max-height: 45% !important;
+  }
+}
+
+/* ═══ Editor Responsive ═══ */
+
+/* Desktop: always show both panels */
+@media (min-width: 769px) {
+  .mobile-tab-bar {
+    display: none !important;
+  }
+  .mobile-edit-panel,
+  .mobile-preview-panel {
+    display: flex !important;
+  }
+}
+
+/* Mobile: tab switching */
+@media (max-width: 768px) {
+  .editor-main-grid {
+    border-radius: 0 !important;
+    border: none !important;
+  }
+
+  .mobile-edit-panel[data-active="false"],
+  .mobile-preview-panel[data-active="false"] {
+    display: none !important;
+  }
+  .mobile-edit-panel[data-active="true"],
+  .mobile-preview-panel[data-active="true"] {
+    display: flex !important;
+  }
+
+  .editor-textarea {
+    -webkit-overflow-scrolling: touch;
+    font-size: 16px !important; /* Prevent iOS zoom on focus */
+  }
+}
+
+/* iPhone safe area support */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .mobile-tab-bar {
+    padding-bottom: env(safe-area-inset-bottom);
+    min-height: calc(48px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Gallery responsive */
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 3vw !important;
+    width: 92vw !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    width: 95vw !important;
+  }
+}
+
+/* Lightbox responsive */
+@media (max-width: 768px) {
+  .lightbox-inner {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  .lightbox-image-wrap {
+    flex: none !important;
+    width: 100% !important;
+    max-height: 50vh !important;
+  }
+
+  .lightbox-desc {
+    flex: none !important;
+    max-height: 30vh !important;
+    width: 100% !important;
+  }
+}
+
+/* Particle section responsive */
+@media (max-width: 768px) {
+  .particle-flex {
+    flex-direction: column !important;
+    gap: 2rem !important;
+  }
+
+  .particle-text-col {
+    width: 100% !important;
+  }
+
+  .particle-canvas-col {
+    width: 100% !important;
+    min-height: 300px !important;
+  }
+}
+
+/* Navigation responsive */
+@media (max-width: 480px) {
+  .nav-logo {
+    font-size: 18px !important;
+  }
+
+  .nav-menu-btn {
+    font-size: 10px !important;
+    padding: 6px 14px !important;
+  }
+}
+
+/* Waves video responsive */
+@media (max-width: 768px) {
+  .waves-container {
+    width: 95vw !important;
+  }
+
+  .waves-overlay {
+    padding: 2rem !important;
+  }
+}
+
+/* Footer responsive */
+@media (max-width: 768px) {
+  .footer-grid {
+    gap: 2rem !important;
+  }
+}
+
+/* ============================
+   Editor UI/UX Enhancements
+   ============================ */
+
+/* Smooth button transitions */
+.editor-topbar button,
+.mobile-tab-bar button {
+  transition: all 0.15s ease !important;
+}
+
+.editor-topbar button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.editor-topbar button:active {
+  transform: scale(0.96);
+}
+
+/* Copy button success animation */
+@keyframes copySuccess {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.copy-success {
+  animation: copySuccess 0.3s ease;
+}
+
+/* Custom scrollbar for editor */
+.editor-textarea::-webkit-scrollbar,
+.mobile-preview-panel > div::-webkit-scrollbar {
+  width: 6px;
+}
+
+.editor-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor-textarea::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.editor-textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Preview panel scrollbar */
+.mobile-preview-panel > div::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+.mobile-preview-panel > div::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Drag overlay animation */
+@keyframes dragPulse {
+  0%, 100% { border-color: #f25b29; }
+  50% { border-color: #ff7a4d; }
+}
+
+/* Theme dropdown animation */
+#theme-dropdown {
+  animation: dropdownIn 0.15s ease;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile tab bar button hover */
+.mobile-tab-bar button:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Editor textarea focus state */
+.editor-textarea:focus {
+  box-shadow: inset 0 0 0 1px rgba(242, 91, 41, 0.3);
+}
+
+/* Image in preview hover effect */
+.mobile-preview-panel img {
+  transition: opacity 0.2s ease;
+}
+
+/* Input focus states */
+.editor-topbar input:focus {
+  border-color: rgba(242, 91, 41, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(242, 91, 41, 0.1);
+}
+
+/* Smooth page transitions */
+.editor-section {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================
+   Selection
+   ============================ */
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-inverse-text);
+}
