@@ -1,4 +1,6 @@
 import { marked } from "marked"
+import { katexCss } from "./katexCss"
+import { extractMath, injectRenderedMath } from "./mathRenderer"
 import { themes, type Theme } from "./themes"
 
 // Configure marked for GFM
@@ -37,17 +39,29 @@ export function renderMarkdownToHtml(markdown: string, themeId: string = "minima
   const theme = themes.find((t) => t.id === themeId) || themes[0]
   const s = theme.styles
 
-  // Parse markdown to HTML
-  let html = marked.parse(markdown) as string
+  // 1. Extract LaTeX math expressions and replace with placeholders
+  const { prepared, snippets } = extractMath(markdown)
 
-  // Resolve local image paths for preview
+  // 2. Parse markdown to HTML
+  let html = marked.parse(prepared) as string
+
+  // 3. Replace placeholders with rendered KaTeX HTML
+  html = injectRenderedMath(html, snippets)
+
+  // 4. Resolve local image paths for preview
   html = resolveImagePaths(html)
 
-  // Apply inline styles to all elements (DOM-based, merges safely with existing styles)
+  // 5. Apply inline styles to all elements (DOM-based, merges safely with existing styles)
   html = applyInlineStyles(html, theme)
 
-  // Wrap in <section> container (NOT <div> — WeChat filters div!)
-  html = `<section style="${s.container}">${html}</section>`
+  // 6. Inject KaTeX CSS so formulas render correctly.
+  //    Note: WeChat may strip <style> tags; for full WeChat compatibility,
+  //    formulas should be verified after paste. The style tag is included
+  //    so exported HTML and browser preview work perfectly.
+  const mathStyles = snippets.length > 0 ? `<style>${katexCss}</style>` : ""
+
+  // 7. Wrap in <section> container (NOT <div> — WeChat filters div!)
+  html = `<section style="${s.container}">${mathStyles}${html}</section>`
 
   return html
 }
@@ -256,6 +270,16 @@ function publish(article: Article): Promise<void> {
 }
 \`\`\`
 
+### 数学公式
+
+行内公式：$E = mc^2$
+
+块级公式：
+
+$$
+\\int_{a}^{b} f(x) \\, dx = F(b) - F(a)
+$$
+
 ### 数据展示
 
 | 功能 | 状态 | 备注 |
@@ -265,6 +289,7 @@ function publish(article: Article): Promise<void> {
 | 代码高亮 | ✅ 已上线 | 自动识别语言 |
 | 表格渲染 | ✅ 已上线 | 含表头样式 |
 | 图片支持 | ✅ 已上线 | 上传/粘贴/拖拽 |
+| 数学公式 | ✅ 已上线 | 支持 LaTeX 语法 |
 
 ### 排版原则
 
