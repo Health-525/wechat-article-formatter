@@ -10,12 +10,19 @@ marked.setOptions({
 /**
  * Convert local/relative image paths to full URLs for preview.
  * Leaves absolute URLs (http/https/data) untouched.
+ *
+ * Root-relative paths like "/images/..." are resolved against the current
+ * page's directory so they work when the app is deployed under a subpath
+ * (e.g. GitHub Pages project sites).
  */
 function resolveImagePaths(html: string): string {
-  const origin = typeof window !== "undefined" ? window.location.origin : ""
+  const base =
+    typeof window !== "undefined"
+      ? new URL(".", window.location.href).href
+      : ""
   return html.replace(
     /src="(\/|\.\/)/g,
-    (_, slash: string) => `src="${slash === "/" ? origin + "/" : ""}`
+    (_, slash: string) => `src="${slash === "/" ? base : ""}`
   )
 }
 
@@ -220,7 +227,7 @@ export const demoMarkdown = `## 什么是墨排？
 
 **墨排**是一款专为公众号作者打造的 Markdown 排版工具。输入 Markdown，即刻获得出版级排版效果。
 
-![写作时光](/images/demo-article.jpg)
+![写作时光](images/demo-article.jpg)
 
 > *好的排版让内容更有说服力。真正的美，存在于克制之中。*
 >
