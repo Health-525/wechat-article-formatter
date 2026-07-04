@@ -5,6 +5,7 @@ import {
   Trash2,
   Copy,
   Check,
+  CheckSquare,
   ImageIcon,
   Maximize2,
   Minimize2,
@@ -134,6 +135,7 @@ function MarkdownToolbar({ onWrap, onInsert, compact }: ToolbarProps) {
     { icon: ListOrdered, label: "序号", action: () => onWrap("1. ", "") },
     { icon: Table, label: "表格", action: () => onInsert("\n| 表头1 | 表头2 |\n|------|------|\n| 内容1 | 内容2 |\n") },
     { icon: Minus, label: "分隔线", action: () => onInsert("\n---\n") },
+    { icon: CheckSquare, label: "任务", action: () => onInsert("\n:::task\n- [ ] 待办任务一\n- [x] 已完成任务\n:::\n") },
   ]
 
   return (

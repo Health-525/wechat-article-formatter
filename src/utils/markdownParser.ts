@@ -1,6 +1,7 @@
 import { marked } from "marked"
 import { katexCss } from "./katexCss"
 import { extractMath, injectRenderedMath } from "./mathRenderer"
+import { extractTaskBlocks, injectTaskBlocks } from "./taskRenderer"
 import { themes, type Theme } from "./themes"
 
 // Configure marked for GFM
@@ -39,28 +40,34 @@ export function renderMarkdownToHtml(markdown: string, themeId: string = "minima
   const theme = themes.find((t) => t.id === themeId) || themes[0]
   const s = theme.styles
 
-  // 1. Extract LaTeX math expressions and replace with placeholders
-  const { prepared, snippets } = extractMath(markdown)
+  // 1. Extract animated task blocks and replace with placeholders
+  const { prepared: taskPrepared, blocks } = extractTaskBlocks(markdown)
 
-  // 2. Parse markdown to HTML
+  // 2. Extract LaTeX math expressions and replace with placeholders
+  const { prepared, snippets } = extractMath(taskPrepared)
+
+  // 3. Parse markdown to HTML
   let html = marked.parse(prepared) as string
 
-  // 3. Replace placeholders with rendered KaTeX HTML
+  // 4. Replace placeholders with rendered KaTeX HTML
   html = injectRenderedMath(html, snippets)
 
-  // 4. Resolve local image paths for preview
+  // 5. Replace placeholders with animated task cards
+  html = injectTaskBlocks(html, blocks)
+
+  // 6. Resolve local image paths for preview
   html = resolveImagePaths(html)
 
-  // 5. Apply inline styles to all elements (DOM-based, merges safely with existing styles)
+  // 7. Apply inline styles to all elements (DOM-based, merges safely with existing styles)
   html = applyInlineStyles(html, theme)
 
-  // 6. Inject KaTeX CSS so formulas render correctly.
+  // 8. Inject KaTeX CSS so formulas render correctly.
   //    Note: WeChat may strip <style> tags; for full WeChat compatibility,
   //    formulas should be verified after paste. The style tag is included
   //    so exported HTML and browser preview work perfectly.
   const mathStyles = snippets.length > 0 ? `<style>${katexCss}</style>` : ""
 
-  // 7. Wrap in <section> container (NOT <div> — WeChat filters div!)
+  // 9. Wrap in <section> container (NOT <div> — WeChat filters div!)
   html = `<section style="${s.container}">${mathStyles}${html}</section>`
 
   return html
