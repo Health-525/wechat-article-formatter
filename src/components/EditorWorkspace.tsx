@@ -32,6 +32,7 @@ import {
   copyToClipboard,
   demoMarkdown,
 } from "../utils/markdownParser"
+import { useDebounce } from "../hooks/useDebounce"
 
 /**
  * Count meaningful content length.
@@ -262,6 +263,10 @@ export default function EditorWorkspace() {
       ),
     [markdown, title, activeTheme]
   )
+
+  // Debounce preview display so heavy rendering doesn't block typing.
+  // Copy/export still use the live previewHtml.
+  const displayHtml = useDebounce(previewHtml, 180)
 
   const wordCount = useMemo(() => countContent(markdown), [markdown])
 
@@ -983,7 +988,7 @@ export default function EditorWorkspace() {
               WebkitOverflowScrolling: "touch",
             }}
           >
-            <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
+            <div dangerouslySetInnerHTML={{ __html: displayHtml }} />
           </div>
         </div>
       </div>
