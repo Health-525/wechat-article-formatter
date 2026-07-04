@@ -24,6 +24,11 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   handleReset = () => {
+    if (
+      !window.confirm("这将清除当前草稿并刷新页面，是否继续？")
+    ) {
+      return
+    }
     sessionStorage.removeItem("mopai-markdown")
     sessionStorage.removeItem("mopai-title")
     sessionStorage.removeItem("mopai-theme")

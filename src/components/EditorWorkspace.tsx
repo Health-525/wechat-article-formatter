@@ -9,6 +9,7 @@ import {
   Maximize2,
   Minimize2,
   ChevronDown,
+  MoreVertical,
   Eye,
   Code2,
   Bold,
@@ -65,11 +66,13 @@ function TooltipBtn({
   label,
   onClick,
   danger,
+  hideLabel = false,
 }: {
   children: React.ReactNode
   label: string
   onClick: () => void
   danger?: boolean
+  hideLabel?: boolean
 }) {
   return (
     <button
@@ -97,15 +100,17 @@ function TooltipBtn({
         background: "transparent",
         border: "none",
         borderRadius: "6px",
-        padding: "6px 8px",
+        padding: hideLabel ? "8px" : "8px 10px",
         fontSize: "12px",
         cursor: "pointer",
         transition: "all 0.15s ease",
         whiteSpace: "nowrap",
+        minWidth: "36px",
+        minHeight: "36px",
       }}
     >
       {children}
-      <span style={{ fontFamily: "var(--font-sans)" }}>{label}</span>
+      {!hideLabel && <span style={{ fontFamily: "var(--font-sans)" }}>{label}</span>}
     </button>
   )
 }
@@ -114,9 +119,10 @@ function TooltipBtn({
 interface ToolbarProps {
   onWrap: (before: string, after: string, defaultText?: string) => void
   onInsert: (text: string) => void
+  compact?: boolean
 }
 
-function MarkdownToolbar({ onWrap, onInsert }: ToolbarProps) {
+function MarkdownToolbar({ onWrap, onInsert, compact }: ToolbarProps) {
   const tools = [
     { icon: Heading, label: "标题", action: () => onWrap("## ", "") },
     { icon: Bold, label: "粗体", action: () => onWrap("**", "**") },
@@ -135,12 +141,14 @@ function MarkdownToolbar({ onWrap, onInsert }: ToolbarProps) {
       style={{
         display: "flex",
         alignItems: "center",
-        gap: "2px",
-        padding: "4px 8px",
+        gap: compact ? "4px" : "2px",
+        padding: compact ? "6px 12px" : "4px 8px",
         background: "#0d0d0f",
         borderBottom: "1px solid rgba(255,255,255,0.05)",
-        flexWrap: "wrap",
+        flexWrap: compact ? "nowrap" : "wrap",
         flexShrink: 0,
+        overflowX: compact ? "auto" : undefined,
+        scrollbarWidth: compact ? "none" : undefined,
       }}
     >
       {tools.map((tool) => (
@@ -152,8 +160,9 @@ function MarkdownToolbar({ onWrap, onInsert }: ToolbarProps) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            width: "28px",
-            height: "28px",
+            width: compact ? "36px" : "28px",
+            height: compact ? "36px" : "28px",
+            flexShrink: 0,
             color: "rgba(255,255,255,0.55)",
             background: "transparent",
             border: "none",
@@ -171,7 +180,7 @@ function MarkdownToolbar({ onWrap, onInsert }: ToolbarProps) {
           }}
           title={tool.label}
         >
-          <tool.icon size={15} />
+          <tool.icon size={compact ? 18 : 15} />
         </button>
       ))}
     </div>
@@ -194,6 +203,7 @@ export default function EditorWorkspace() {
     return saved && themes.some((t) => t.id === saved) ? saved : "minimal-white"
   })
   const [copied, setCopied] = useState(false)
+  const [copyError, setCopyError] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit")
@@ -202,10 +212,12 @@ export default function EditorWorkspace() {
   const [savedAt, setSavedAt] = useState<string | null>(null)
   const [showHelp, setShowHelp] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
+  const [moreOpen, setMoreOpen] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
   const themeDropdownRef = useRef<HTMLDivElement>(null)
+  const moreMenuRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const markdownRef = useRef(markdown)
 
@@ -230,6 +242,12 @@ export default function EditorWorkspace() {
         !themeDropdownRef.current.contains(e.target as Node)
       ) {
         setThemeOpen(false)
+      }
+      if (
+        moreMenuRef.current &&
+        !moreMenuRef.current.contains(e.target as Node)
+      ) {
+        setMoreOpen(false)
       }
     }
     document.addEventListener("click", handleClick)
@@ -271,10 +289,19 @@ export default function EditorWorkspace() {
   const wordCount = useMemo(() => countContent(markdown), [markdown])
 
   // ─── File Handlers ───
+  const hasContent = Boolean(markdown || title)
+
   const handleFileUpload = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
       if (!file) return
+      if (
+        hasContent &&
+        !window.confirm("导入文件将覆盖当前内容，是否继续？")
+      ) {
+        e.target.value = ""
+        return
+      }
       const reader = new FileReader()
       reader.onload = (event) => {
         const content = event.target?.result as string
@@ -287,7 +314,7 @@ export default function EditorWorkspace() {
       reader.readAsText(file)
       e.target.value = ""
     },
-    []
+    [hasContent]
   )
 
   const insertImage = useCallback(
@@ -369,11 +396,18 @@ export default function EditorWorkspace() {
       const files = e.dataTransfer.files
       if (!files) return
       const mdExtensions = /\.(md|markdown|txt)$/i
+      let overwriteConfirmed = !hasContent
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
         if (file.type.startsWith("image/")) processImageFile(file)
         else if (mdExtensions.test(file.name)) {
+          if (!overwriteConfirmed) {
+            if (!window.confirm("导入文件将覆盖当前内容，是否继续？")) {
+              continue
+            }
+            overwriteConfirmed = true
+          }
           const reader = new FileReader()
           reader.onload = (event) => {
             const content = event.target?.result as string
@@ -387,7 +421,7 @@ export default function EditorWorkspace() {
         }
       }
     },
-    [processImageFile]
+    [processImageFile, hasContent]
   )
 
   const handleCopy = useCallback(async () => {
@@ -395,18 +429,23 @@ export default function EditorWorkspace() {
     if (success) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
+    } else {
+      setCopyError(true)
+      setTimeout(() => setCopyError(false), 2000)
     }
   }, [previewHtml])
 
   const handleClear = useCallback(() => {
+    if (hasContent && !window.confirm("确定清空当前内容？")) return
     setMarkdown("")
     setTitle("")
-  }, [])
+  }, [hasContent])
 
   const handleLoadDemo = useCallback(() => {
+    if (hasContent && !window.confirm("加载示例将覆盖当前内容，是否继续？")) return
     setMarkdown(demoMarkdown)
     setTitle("欢迎使用墨排")
-  }, [])
+  }, [hasContent])
 
   // ─── Toolbar actions ───
   const wrapSelection = useCallback(
@@ -557,14 +596,16 @@ export default function EditorWorkspace() {
 
         {/* Action buttons — icon + label for clarity */}
         <TooltipBtn
-          label={isMobile ? "" : "导入"}
+          label="导入 Markdown"
+          hideLabel={isMobile}
           onClick={() => fileInputRef.current?.click()}
         >
           <Upload size={15} />
         </TooltipBtn>
 
         <TooltipBtn
-          label={isMobile ? "" : "图片"}
+          label="插入图片"
+          hideLabel={isMobile}
           onClick={() => imageInputRef.current?.click()}
         >
           <ImageIcon size={15} />
@@ -582,6 +623,69 @@ export default function EditorWorkspace() {
               <Download size={15} />
             </TooltipBtn>
           </>
+        )}
+
+        {isMobile && (
+          <div ref={moreMenuRef} style={{ position: "relative", flexShrink: 0 }}>
+            <TooltipBtn
+              label="更多"
+              hideLabel
+              onClick={() => setMoreOpen((v) => !v)}
+            >
+              <MoreVertical size={15} />
+            </TooltipBtn>
+            {moreOpen && (
+              <div
+                role="menu"
+                aria-label="更多操作"
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 4px)",
+                  right: 0,
+                  background: "#1c1c1f",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  borderRadius: "10px",
+                  padding: "6px 0",
+                  minWidth: "150px",
+                  zIndex: 100,
+                }}
+              >
+                {[
+                  { label: "示例", icon: FileText, action: handleLoadDemo },
+                  { label: "清空", icon: Trash2, action: handleClear, danger: true },
+                  { label: "导出 HTML", icon: Download, action: handleExportHtml },
+                  { label: "快捷键", icon: Keyboard, action: () => setShowShortcuts(true) },
+                  { label: "帮助", icon: HelpCircle, action: () => setShowHelp(true) },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    role="menuitem"
+                    onClick={() => {
+                      item.action()
+                      setMoreOpen(false)
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                      width: "100%",
+                      padding: "8px 14px",
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "13px",
+                      color: item.danger ? "#ff6b6b" : "rgba(255,255,255,0.85)",
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                  >
+                    <item.icon size={15} />
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         <VDiv />
@@ -746,7 +850,7 @@ export default function EditorWorkspace() {
 
         {/* Fullscreen toggle */}
         <button
-          aria-label={isFullscreen ? "退出全屏" : "全屏编辑"}
+          aria-label={isFullscreen ? "退出聚焦模式" : "进入聚焦模式"}
           onClick={() => setIsFullscreen(!isFullscreen)}
           style={{
             display: "flex",
@@ -756,9 +860,11 @@ export default function EditorWorkspace() {
             background: "transparent",
             border: "none",
             borderRadius: "6px",
-            padding: "6px",
+            padding: "8px",
             cursor: "pointer",
             transition: "all 0.15s",
+            minWidth: "36px",
+            minHeight: "36px",
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "rgba(255,255,255,0.08)"
@@ -782,7 +888,7 @@ export default function EditorWorkspace() {
             fontSize: isMobile ? "12px" : "13px",
             fontWeight: 600,
             color: "#ffffff",
-            background: copied ? "#238636" : "#f25b29",
+            background: copied ? "#238636" : copyError ? "#ff6b6b" : "#f25b29",
             border: "none",
             borderRadius: "6px",
             padding: isMobile ? "6px 12px" : "7px 16px",
@@ -793,13 +899,14 @@ export default function EditorWorkspace() {
             gap: "5px",
             whiteSpace: "nowrap",
             flexShrink: 0,
-            boxShadow: copied
-              ? "none"
-              : "0 2px 8px rgba(242,91,41,0.25)",
+            boxShadow:
+              copied || copyError
+                ? "none"
+                : "0 2px 8px rgba(242,91,41,0.25)",
           }}
         >
           {copied ? <Check size={15} /> : <Copy size={15} />}
-          {copied ? "已复制" : "复制"}
+          {copied ? "已复制" : copyError ? "复制失败" : "复制"}
         </button>
         <div
           aria-live="polite"
@@ -816,7 +923,11 @@ export default function EditorWorkspace() {
             border: 0,
           }}
         >
-          {copied ? "HTML 已复制到剪贴板" : ""}
+          {copied
+            ? "HTML 已复制到剪贴板"
+            : copyError
+              ? "复制失败，请尝试导出 HTML"
+              : ""}
         </div>
       </div>
 
@@ -850,7 +961,11 @@ export default function EditorWorkspace() {
           }}
         >
           {/* Markdown toolbar */}
-          {!isMobile && <MarkdownToolbar onWrap={wrapSelection} onInsert={insertText} />}
+          <MarkdownToolbar
+            onWrap={wrapSelection}
+            onInsert={insertText}
+            compact={isMobile}
+          />
 
           {/* Editor sub-header */}
           <div
@@ -864,7 +979,8 @@ export default function EditorWorkspace() {
               flexShrink: 0,
             }}
           >
-            <span
+            <label
+              htmlFor="mopai-editor"
               style={{
                 fontFamily: "var(--font-sans)",
                 fontSize: "10px",
@@ -875,7 +991,7 @@ export default function EditorWorkspace() {
               }}
             >
               Markdown
-            </span>
+            </label>
             <span
               style={{
                 fontFamily: "var(--font-sans)",
@@ -884,7 +1000,7 @@ export default function EditorWorkspace() {
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              {savedAt ? `已保存 ${savedAt} · ${wordCount}` : wordCount}
+              {savedAt ? `已自动备份 ${savedAt} · ${wordCount}` : wordCount}
               <span style={{ marginLeft: "2px" }}>字</span>
             </span>
           </div>
@@ -917,10 +1033,12 @@ export default function EditorWorkspace() {
           {/* Textarea */}
           <textarea
             ref={textareaRef}
+            id="mopai-editor"
             className="editor-textarea"
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
             onPaste={handlePaste}
+            aria-label="Markdown 编辑区"
             placeholder={
               "输入 Markdown...\n\n支持：标题、列表、表格、代码块、图片\n\n粘贴或拖拽图片可直接插入"
             }
@@ -988,7 +1106,11 @@ export default function EditorWorkspace() {
               WebkitOverflowScrolling: "touch",
             }}
           >
-            <div dangerouslySetInnerHTML={{ __html: displayHtml }} />
+            <div
+              role="region"
+              aria-label="排版预览"
+              dangerouslySetInnerHTML={{ __html: displayHtml }}
+            />
           </div>
         </div>
       </div>
@@ -1102,6 +1224,10 @@ export default function EditorWorkspace() {
             <h3 style={{ fontSize: "14px", marginBottom: "10px" }}>图片支持</h3>
             <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "20px" }}>
               支持点击上传、粘贴截图、拖拽文件三种方式插入图片。图片会自动以 Base64 形式嵌入，无需额外图床。
+            </p>
+            <h3 style={{ fontSize: "14px", marginBottom: "10px" }}>草稿说明</h3>
+            <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "20px" }}>
+              内容会实时备份到当前浏览器标签页，刷新不丢失；关闭标签页或浏览器后草稿会自动清除，保护你的隐私。重要内容请及时导出 HTML。
             </p>
             <button
               onClick={() => setShowHelp(false)}
