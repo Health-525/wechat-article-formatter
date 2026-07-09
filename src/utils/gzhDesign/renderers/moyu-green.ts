@@ -198,7 +198,7 @@ function coverBreaking(
           ${titleBlock}
         </section>
         <section style="flex-shrink:0;width:110px;height:110px;border-radius:16px;overflow:hidden;border:1px solid rgba(5,150,105,0.1);box-shadow:0 4px 12px rgba(0,0,0,0.06);">
-          <img src="${escapeHtml(image)}" style="width:100%;height:100%;object-fit:cover;display:block;">
+          <img src="${escapeHtml(image)}" style="width:100%;height:auto;display:block;">
         </section>
       </section>`
     : `<section>${titleBlock}</section>`

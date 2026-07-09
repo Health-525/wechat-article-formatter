@@ -166,22 +166,22 @@ export function footerCta(): string {
   return `
 <section style="background:radial-gradient(circle at center,${t.paleGray} 0%,#FFFFFF 100%);border:1px solid ${t.lightBorder};border-radius:16px;padding:32px 20px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.03);margin:0 0 24px;">
   <p style="font-size:13px;font-weight:bold;color:${t.title};margin-bottom:20px;line-height:1.6;">${span("觉得这篇文章对你有用？随手点个赞、在看、转发三连，下次见～")}</p>
-  <section style="display:flex;justify-content:center;gap:24px;margin-bottom:16px;">
-    <section style="text-align:center;cursor:pointer;color:${t.secondary};">
+  <section style="display:flex;justify-content:center;margin-bottom:16px;">
+    <section style="text-align:center;margin:0 12px;color:${t.secondary};">
       <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:#fff;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,0.05);border:1px solid ${t.lightGrayBg};">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+        <span style="font-size:20px;line-height:1;">${span("👍")}</span>
       </section>
       <span style="font-size:10px;font-weight:600;">${span("点赞")}</span>
     </section>
-    <section style="text-align:center;cursor:pointer;color:${t.secondary};">
+    <section style="text-align:center;margin:0 12px;color:${t.secondary};">
       <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:#fff;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,0.05);border:1px solid ${t.lightGrayBg};">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path></svg>
+        <span style="font-size:20px;line-height:1;">${span("👁")}</span>
       </section>
       <span style="font-size:10px;font-weight:600;">${span("在看")}</span>
     </section>
-    <section style="text-align:center;cursor:pointer;color:${t.primary};">
+    <section style="text-align:center;margin:0 12px;color:${t.primary};">
       <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:${t.bgGreen2};border-radius:12px;box-shadow:0 2px 4px rgba(5,150,105,0.15);border:1px solid ${t.paleGreen};">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18v-4a8 8 0 0 1 8-8h8"></path><polyline points="16 2 20 6 16 10"></polyline></svg>
+        <span style="font-size:20px;line-height:1;">${span("⭐")}</span>
       </section>
       <span style="font-size:10px;font-weight:600;">${span("转发")}</span>
     </section>
