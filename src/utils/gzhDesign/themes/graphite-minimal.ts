@@ -86,7 +86,7 @@ export function chapterTitle(
     <p style="font-size:48px;font-weight:900;color:${t.line};margin:0;line-height:1;letter-spacing:-2px;">
       ${span(number)}
     </p>
-    <section style="margin-top:-8px;">
+    <section>
       <p style="font-size:10px;color:${t.muted};font-weight:500;letter-spacing:3px;margin:0 0 6px;text-transform:uppercase;">
         ${span(partLabel)}
       </p>
@@ -279,8 +279,8 @@ export function list(items: string[], ordered = false): string {
   if (ordered) {
     const rows = items
       .map((item, index) => {
-        return `<section style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-  <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:${t.title};color:#fff;font-size:12px;font-weight:700;border-radius:50%;flex-shrink:0;margin-top:2px;">${span(String(index + 1))}</span>
+        return `<section style="display:flex;align-items:flex-start;margin-bottom:12px;">
+  <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:${t.title};color:#fff;font-size:12px;font-weight:700;border-radius:50%;flex-shrink:0;margin-top:2px;margin-right:10px;">${span(String(index + 1))}</span>
   <p style="font-size:15px;color:${t.text};margin:0;line-height:1.8;flex:1;">${span(item)}</p>
 </section>`
       })
