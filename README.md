@@ -92,12 +92,9 @@
 
 ### 本地开发
 
-> 源码在 `source` 分支，部署产物在 `main` 分支。
-
 ```bash
 git clone https://github.com/Health-525/wechat-article-formatter.git
 cd wechat-article-formatter
-git checkout source
 npm install
 npm run dev      # http://localhost:3000
 ```
@@ -147,18 +144,20 @@ public/                         # favicon / og-image / 纸纹纹理 / robots / s
 
 ## 🚀 部署
 
-GitHub Pages 托管，`main` 分支为部署分支、`source` 为源码分支。
+源码与部署都在 `main` 分支：推送到 `main` 会自动触发 GitHub Actions 构建（`npm run build`）并部署到 GitHub Pages。
+
+> 一次性设置：仓库 Settings → Pages → Source 选择「GitHub Actions」。
 
 ```bash
-git checkout source && npm install && npm run build
-git checkout main && cp -r dist/* . && git add -A && git commit -m "deploy" && git push origin main
+git commit -m "feat: ..."
+git push origin main      # 推送即自动部署
 ```
 
 ---
 
 ## 🤝 贡献
 
-欢迎 Issue / PR：Fork → `source` 分支建特性分支 → 提 PR。
+欢迎 Issue / PR：Fork → 基于 `main` 建特性分支 → 提 PR。
 
 ## 📄 许可证
 
