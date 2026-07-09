@@ -298,7 +298,7 @@ const t02 = createTheme(
     h1: "font-size:18px;font-weight:700;color:#1a202c;margin:32px 0 12px;padding-bottom:10px;border-bottom:3px solid #4a5568;line-height:1.4;letter-spacing:0.3px;",
     h3: "font-size:15px;font-weight:700;color:#4a5568;margin:20px 0 8px;padding:6px 12px;background:#edf2f7;border-radius:4px;line-height:1.4;letter-spacing:0.3px;",
     strong: "font-weight:700;color:#1a202c;background:#bee3f8;padding:1px 5px;border-radius:2px;",
-    hr: "border:none;height:2px;background:repeating-linear-gradient(90deg,#cbd5e0,#cbd5e0 8px,transparent 8px,transparent 16px);margin:36px 0;",
+    hr: "border:0;border-top:2px dashed #cbd5e0;height:0;margin:36px 0;",
   }
 )
 
