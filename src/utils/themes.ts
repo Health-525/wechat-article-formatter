@@ -638,7 +638,7 @@ const t09 = createTheme(
     blockquote: "margin:22px 0;padding:14px 18px;background:#f0e8da;color:#7a6b5d;font-size:14px;line-height:1.9;border-radius:20px;font-style:italic;",
     strong: "font-weight:700;color:#3d3229;background:#f0e8da;padding:2px 8px;border-radius:8px;border:1px solid #e0d4c4;",
     img: "max-width:100%;height:auto;display:block;margin:18px auto;border-radius:16px;border:2px solid #e0d4c4;",
-    hr: "border:none;height:2px;background:repeating-linear-gradient(90deg,#e0d4c4,#e0d4c4 8px,transparent 8px,transparent 16px);margin:28px 0;",
+    hr: "border:0;border-top:2px dashed #e0d4c4;height:0;margin:28px 0;",
   }
 )
 
