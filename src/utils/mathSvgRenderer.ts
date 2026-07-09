@@ -1,3 +1,5 @@
+import { renderFormulaToHtml } from "./mathRenderer"
+
 export interface MathSvgSnippet {
   id: string
   tex: string
@@ -17,6 +19,10 @@ const INLINE_PLACEHOLDER = (id: string) =>
 
 /**
  * Extract LaTeX math expressions and replace them with placeholders.
+ *
+ * Note: despite the module name, gzh-design themes now render formulas as
+ * KaTeX HTML with inline styles instead of SVG images. The placeholder class
+ * names are kept for backwards compatibility with existing renderers.
  */
 export function extractMathSvg(markdown: string): {
   prepared: string
@@ -43,15 +49,11 @@ export function extractMathSvg(markdown: string): {
   return { prepared, snippets }
 }
 
-function latexToSvgUrl(tex: string): string {
-  // Use CodeCogs LaTeX-to-SVG service so formulas appear as images in WeChat.
-  // WeChat strips CSS classes, so image-based formulas are the only reliable option.
-  const cleaned = tex.replace(/^\\\[/, "").replace(/\\\]$/, "").trim()
-  return `https://latex.codecogs.com/svg.latex?${encodeURIComponent(cleaned)}`
-}
-
 /**
- * Replace placeholders with rendered formula images.
+ * Replace placeholders with rendered formula HTML.
+ *
+ * Uses KaTeX with inlined CSS so formulas appear as selectable text in the
+ * WeChat editor rather than external images.
  */
 export function injectRenderedMathSvg(
   html: string,
@@ -60,15 +62,20 @@ export function injectRenderedMathSvg(
   let result = html
 
   for (const { id, tex, displayMode } of snippets) {
-    const src = latexToSvgUrl(tex)
-    const placeholder = displayMode ? BLOCK_PLACEHOLDER(id) : INLINE_PLACEHOLDER(id)
-
-    if (displayMode) {
-      const replacement = `<section style="text-align:center;margin:16px 0;"><img src="${src}" alt="${tex.replace(/"/g, "&quot;")}" style="max-width:100%;height:auto;display:block;margin:0 auto;"></section>`
-      result = result.replace(placeholder, replacement)
-    } else {
-      const replacement = `<img src="${src}" alt="${tex.replace(/"/g, "&quot;")}" style="height:1em;width:auto;vertical-align:middle;display:inline-block;">`
-      result = result.replace(placeholder, replacement)
+    try {
+      const rendered = renderFormulaToHtml(tex, displayMode)
+      const placeholder = displayMode
+        ? BLOCK_PLACEHOLDER(id)
+        : INLINE_PLACEHOLDER(id)
+      result = result.replace(placeholder, rendered)
+    } catch {
+      const fallback = displayMode
+        ? `<pre style="background:#f5f5f5;padding:12px;border-radius:6px;overflow-x:auto;">${tex}</pre>`
+        : `<code style="background:#f5f5f5;padding:2px 5px;border-radius:3px;">${tex}</code>`
+      const placeholder = displayMode
+        ? BLOCK_PLACEHOLDER(id)
+        : INLINE_PLACEHOLDER(id)
+      result = result.replace(placeholder, fallback)
     }
   }
 

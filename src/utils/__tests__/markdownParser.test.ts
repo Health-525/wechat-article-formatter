@@ -103,15 +103,16 @@ describe("markdownParser", () => {
     })
 
     it.each(["moyu-green", "red-white", "graphite-minimal", "zen-whitespace", "moyu-ticket", "olive-journal"])(
-      "renders LaTeX formulas as SVG images for gzh-design theme %s",
+      "renders LaTeX formulas as KaTeX HTML for gzh-design theme %s",
       (themeId) => {
         const md = "## 标题\n\n行内 $E=mc^2$ 测试。\n\n$$\\frac{1}{2}$$"
         const html = renderMarkdownToHtml(md, themeId)
-        expect(html).toContain("<img")
-        expect(html).toContain("latex.codecogs.com")
-        expect(html).toContain("E=mc^2")
+        expect(html).toContain("katex")
+        expect(html).toContain("style=")
+        expect(html).toContain("E")
         expect(html).not.toContain("math-svg-inline-placeholder")
         expect(html).not.toContain("math-svg-block-placeholder")
+        expect(html).not.toContain("latex.codecogs.com")
       }
     )
 

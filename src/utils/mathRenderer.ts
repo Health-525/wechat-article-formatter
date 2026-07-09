@@ -213,6 +213,27 @@ function matchesSinglePart(el: Element, part: string): boolean {
 }
 
 /**
+ * Render a single LaTeX expression to WeChat-safe HTML with inline styles.
+ */
+export function renderFormulaToHtml(
+  tex: string,
+  displayMode: boolean
+): string {
+  let rendered = katex.renderToString(tex, {
+    throwOnError: false,
+    displayMode,
+    strict: false,
+    output: "html",
+    trust: false,
+  })
+
+  rendered = removeMathMlNode(rendered)
+  rendered = inlineKaTeXStyles(rendered)
+
+  return rendered
+}
+
+/**
  * Remove the MathML accessibility node that KaTeX embeds. It duplicates the
  * formula text and is normally hidden by katex.css; without that stylesheet it
  * would be visible and break the layout.
@@ -240,16 +261,7 @@ export function injectRenderedMath(
 
   for (const { id, tex, displayMode } of snippets) {
     try {
-      let rendered = katex.renderToString(tex, {
-        throwOnError: false,
-        displayMode,
-        strict: false,
-        output: "html",
-        trust: false,
-      })
-
-      rendered = removeMathMlNode(rendered)
-      rendered = inlineKaTeXStyles(rendered)
+      const rendered = renderFormulaToHtml(tex, displayMode)
 
       const placeholder = displayMode
         ? BLOCK_PLACEHOLDER(id)
