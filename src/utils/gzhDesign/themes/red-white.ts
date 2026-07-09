@@ -154,22 +154,22 @@ export function footerCta(): string {
   return `
 <section style="margin:0 10px 24px;background:${t.white};border-radius:12px;box-shadow:0 4px 24px -4px rgba(220,38,38,0.12);padding:28px 20px;text-align:center;overflow:hidden;">
   <p style="font-size:${t.bodySize}px;font-weight:800;color:${t.title};margin:0 0 20px;line-height:1.6;">${span("喜欢这种编辑风？点个关注，下一篇更精彩。")}</p>
-  <section style="display:flex;justify-content:center;gap:24px;margin-bottom:16px;">
-    <section style="text-align:center;color:${t.secondary};">
+  <section style="display:flex;justify-content:center;margin-bottom:16px;">
+    <section style="text-align:center;margin:0 12px;color:${t.secondary};">
       <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:${t.bg};border-radius:12px;box-shadow:0 2px 4px rgba(220,38,38,0.08);border:1px solid ${t.lightestRed};">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+        <span style="font-size:20px;line-height:1;">${span("👍")}</span>
       </section>
       <span style="font-size:10px;font-weight:600;">${span("点赞")}</span>
     </section>
-    <section style="text-align:center;color:${t.secondary};">
+    <section style="text-align:center;margin:0 12px;color:${t.secondary};">
       <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:${t.bg};border-radius:12px;box-shadow:0 2px 4px rgba(220,38,38,0.08);border:1px solid ${t.lightestRed};">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path></svg>
+        <span style="font-size:20px;line-height:1;">${span("👁")}</span>
       </section>
       <span style="font-size:10px;font-weight:600;">${span("在看")}</span>
     </section>
-    <section style="text-align:center;color:${t.primary};">
+    <section style="text-align:center;margin:0 12px;color:${t.primary};">
       <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:${t.lightestRed};border-radius:12px;box-shadow:0 2px 4px rgba(220,38,38,0.12);border:1px solid ${t.accent};">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18v-4a8 8 0 0 1 8-8h8"></path><polyline points="16 2 20 6 16 10"></polyline></svg>
+        <span style="font-size:20px;line-height:1;">${span("⭐")}</span>
       </section>
       <span style="font-size:10px;font-weight:600;">${span("转发")}</span>
     </section>
@@ -197,9 +197,9 @@ export function cover(
   const t = DESIGN_TOKENS
   const tagLine =
     tag || date
-      ? `<section style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
-    <span style="display:inline-block;width:4px;height:18px;background:${t.primary};border-radius:2px;overflow:hidden;">${span("<br>")}</span>
-    <span style="font-size:12px;color:${t.muted};letter-spacing:2px;font-weight:700;">${span(tag ?? "")}</span>
+      ? `<section style="display:flex;align-items:center;margin-bottom:14px;">
+    <span style="display:inline-block;width:4px;height:18px;background:${t.primary};border-radius:2px;overflow:hidden;margin-right:10px;">${span("<br>")}</span>
+    <span style="font-size:12px;color:${t.muted};letter-spacing:2px;font-weight:700;margin-right:10px;">${span(tag ?? "")}</span>
     <span style="font-size:12px;color:${t.primary};font-weight:700;">${span(date ?? "")}</span>
   </section>`
       : ""
@@ -267,8 +267,8 @@ export function list(items: string[], ordered?: boolean): string {
     const rows = items
       .map(
         (item, index) => `
-  <section style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
-    <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:${t.primary};color:${t.white};font-size:12px;font-weight:700;border-radius:50%;flex-shrink:0;margin-top:2px;">${span(String(index + 1))}</span>
+  <section style="display:flex;align-items:flex-start;margin-bottom:12px;">
+    <span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:${t.primary};color:${t.white};font-size:12px;font-weight:700;border-radius:50%;flex-shrink:0;margin-top:2px;margin-right:10px;">${span(String(index + 1))}</span>
     <p style="font-size:${t.bodySize}px;color:${t.text};margin:0;line-height:${t.lineHeight};flex:1;">${span(item)}</p>
   </section>`
       )
