@@ -350,7 +350,7 @@ const t03 = createTheme(
     table: "width:100%;border-collapse:collapse;margin:20px 0;font-size:14px;border:1px solid #d4c5a0;background:#fdfbf7;",
     th: "padding:12px 14px;background:#f0ebe3;border-bottom:2px solid #a67c52;text-align:center;font-weight:700;color:#5c3d2e;font-family:'Noto Serif SC',serif;font-size:13px;letter-spacing:1px;",
     td: "padding:12px 14px;border-bottom:1px solid #e8ddd0;color:#4a3728;text-align:center;",
-    hr: "border:none;height:1px;background:repeating-linear-gradient(90deg,transparent,transparent 10px,#c4b5a5 10px,#c4b5a5 20px,transparent 20px,transparent 30px);margin:36px 0;",
+    hr: "border:0;border-top:1px dashed #c4b5a5;height:0;margin:36px 0;",
   }
 )
 
