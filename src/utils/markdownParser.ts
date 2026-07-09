@@ -1,5 +1,5 @@
 import { marked } from "marked"
-import { extractMathSvg, injectRenderedMathSvg } from "./mathSvgRenderer"
+import { extractMath, injectRenderedMath } from "./mathRenderer"
 import { extractTaskBlocks, injectTaskBlocks } from "./taskRenderer"
 import { themes, type Theme } from "./themes"
 import { renderGzhDesignMarkdown } from "./gzhDesign/renderer"
@@ -381,15 +381,15 @@ export function renderMarkdownToHtml(markdown: string, themeId: string = "minima
   const { prepared: taskPrepared, blocks } = extractTaskBlocks(markdown)
 
   // 2. Extract LaTeX math expressions and replace with placeholders.
-  //    Use SVG images instead of KaTeX HTML: WeChat strips KaTeX's class
-  //    attributes, <style> tags and position:absolute rules.
-  const { prepared, snippets } = extractMathSvg(taskPrepared)
+  //    KaTeX renders to HTML with class-based CSS; we inline those styles so
+  //    formulas survive WeChat's filtering of <style> tags and class attrs.
+  const { prepared, snippets } = extractMath(taskPrepared)
 
   // 3. Parse markdown to HTML
   let html = marked.parse(prepared) as string
 
-  // 4. Replace placeholders with WeChat-safe SVG formula images
-  html = injectRenderedMathSvg(html, snippets)
+  // 4. Replace placeholders with KaTeX HTML whose styles are inlined
+  html = injectRenderedMath(html, snippets)
 
   // 5. Replace placeholders with animated task cards
   html = injectTaskBlocks(html, blocks)
@@ -534,9 +534,7 @@ export function validateWeChatHtml(html: string): WeChatValidationResult {
     { rx: /<script[\s>]/gi, msg: "<script> 标签会被过滤" },
     { rx: /<\/ ?div[\s>]/gi, msg: "<div> 会被改写，请用 <section>" },
     { rx: /<link[\s>]/gi, msg: "外部 <link>（CSS/字体）会被过滤" },
-    { rx: /\sclass\s*=/gi, msg: "class 属性会被剥离，请用内联 style" },
     { rx: /\sid\s*=/gi, msg: "id 属性会被剥离" },
-    { rx: /position\s*:\s*(fixed|absolute|sticky)/gi, msg: "position fixed/absolute/sticky 不被支持" },
     { rx: /float\s*:/gi, msg: "float 不被支持" },
     { rx: /@media/gi, msg: "@media 媒体查询不被支持" },
     { rx: /@keyframes/gi, msg: "@keyframes 动画不被支持" },
@@ -549,6 +547,18 @@ export function validateWeChatHtml(html: string): WeChatValidationResult {
   forbidden.forEach(({ rx, msg }) => {
     const hits = (html.match(rx) || []).length
     if (hits) errors.push(`${msg}（命中 ${hits} 处）`)
+  })
+
+  // These are allowed by WeChat but may cause subtle layout issues; warn instead
+  // of error so users can still copy, while being aware of the risk.
+  const warningsList = [
+    { rx: /\sclass\s*=/gi, msg: "class 属性通常会被保留，但无法引用外部 CSS，建议关键样式仍写内联 style" },
+    { rx: /position\s*:\s*(fixed|absolute|sticky|relative)/gi, msg: "position 属性可能被过滤，复杂公式（如分数、上下标）可能出现错位" },
+  ]
+
+  warningsList.forEach(({ rx, msg }) => {
+    const hits = (html.match(rx) || []).length
+    if (hits) warnings.push(`${msg}（命中 ${hits} 处）`)
   })
 
   // span leaf coverage

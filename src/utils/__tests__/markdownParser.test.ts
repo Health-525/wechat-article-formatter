@@ -46,13 +46,13 @@ describe("markdownParser", () => {
       expect(html).toContain("Title")
     })
 
-    it("renders math as WeChat-safe SVG images for classic themes", () => {
+    it("renders math as KaTeX HTML with inline styles for classic themes", () => {
       const html = renderMarkdownToHtml("$x^2$", "minimal-white")
-      expect(html).toContain("latex.codecogs.com")
-      expect(html).toContain("<img")
+      expect(html).toContain("katex")
+      expect(html).toContain("style=")
       expect(html).not.toContain("<style>")
-      expect(html).not.toContain('class="katex')
-      expect(html).not.toContain("position:absolute")
+      expect(html).not.toContain("latex.codecogs.com")
+      expect(html).not.toContain("<img")
     })
 
     it("renders complex gzh-design output with sections, numbering, and leaf spans", () => {
