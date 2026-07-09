@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://health-525.github.io/wechat-article-formatter/sitemap.xml

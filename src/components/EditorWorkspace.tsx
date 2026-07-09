@@ -5,36 +5,34 @@ import {
   Trash2,
   Copy,
   Check,
-  CheckSquare,
   ImageIcon,
   Maximize2,
   Minimize2,
-  ChevronDown,
   MoreVertical,
   Eye,
   Code2,
-  Bold,
-  Italic,
-  Heading,
-  Quote,
-  Code,
-  Link,
-  List,
-  ListOrdered,
-  Table,
-  Minus,
   HelpCircle,
   Download,
   Keyboard,
+  Smartphone,
+  Monitor,
 } from "lucide-react"
-import { themes, themeCategories } from "../utils/themes"
+import { themes } from "../utils/themes"
 import {
   renderMarkdownToHtml,
   wrapArticle,
   copyToClipboard,
   demoMarkdown,
+  getImageCompatibility,
+  validateWeChatHtml,
 } from "../utils/markdownParser"
 import { useDebounce } from "../hooks/useDebounce"
+import { VDiv } from "./workspace/VDiv"
+import { TooltipBtn } from "./workspace/TooltipBtn"
+import { MarkdownToolbar } from "./workspace/MarkdownToolbar"
+import ThemeDropdown from "./workspace/ThemeDropdown"
+import { HelpModal } from "./workspace/HelpModal"
+import { ShortcutsModal } from "./workspace/ShortcutsModal"
 
 /**
  * Count meaningful content length.
@@ -45,148 +43,6 @@ function countContent(text: string): number {
   const cjk = (text.match(/[\u4e00-\u9fa5\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af]/g) || []).length
   const words = (text.match(/[a-zA-Z0-9_]+/g) || []).length
   return cjk + words
-}
-
-// ─── Vertical divider component ───
-function VDiv() {
-  return (
-    <div
-      style={{
-        width: "1px",
-        height: "20px",
-        background: "rgba(255,255,255,0.08)",
-        margin: "0 2px",
-      }}
-    />
-  )
-}
-
-// ─── Tooltip component ───
-function TooltipBtn({
-  children,
-  label,
-  onClick,
-  danger,
-  hideLabel = false,
-}: {
-  children: React.ReactNode
-  label: string
-  onClick: () => void
-  danger?: boolean
-  hideLabel?: boolean
-}) {
-  return (
-    <button
-      aria-label={label}
-      onClick={onClick}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.background = danger
-          ? "rgba(255,107,107,0.1)"
-          : "rgba(255,255,255,0.08)"
-        e.currentTarget.style.color = danger ? "#ff6b6b" : "#fff"
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = "transparent"
-        e.currentTarget.style.color = danger
-          ? "#ff6b6b"
-          : "rgba(255,255,255,0.55)"
-      }}
-      style={{
-        position: "relative",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "4px",
-        color: danger ? "#ff6b6b" : "rgba(255,255,255,0.55)",
-        background: "transparent",
-        border: "none",
-        borderRadius: "6px",
-        padding: hideLabel ? "8px" : "8px 10px",
-        fontSize: "12px",
-        cursor: "pointer",
-        transition: "all 0.15s ease",
-        whiteSpace: "nowrap",
-        minWidth: "36px",
-        minHeight: "36px",
-      }}
-    >
-      {children}
-      {!hideLabel && <span style={{ fontFamily: "var(--font-sans)" }}>{label}</span>}
-    </button>
-  )
-}
-
-// ─── Markdown toolbar component ───
-interface ToolbarProps {
-  onWrap: (before: string, after: string, defaultText?: string) => void
-  onInsert: (text: string) => void
-  compact?: boolean
-}
-
-function MarkdownToolbar({ onWrap, onInsert, compact }: ToolbarProps) {
-  const tools = [
-    { icon: Heading, label: "标题", action: () => onWrap("## ", "") },
-    { icon: Bold, label: "粗体", action: () => onWrap("**", "**") },
-    { icon: Italic, label: "斜体", action: () => onWrap("*", "*") },
-    { icon: Quote, label: "引用", action: () => onWrap("> ", "") },
-    { icon: Code, label: "代码", action: () => onWrap("`", "`") },
-    { icon: Link, label: "链接", action: () => onWrap("[", "](https://)", "链接文字") },
-    { icon: List, label: "列表", action: () => onWrap("- ", "") },
-    { icon: ListOrdered, label: "序号", action: () => onWrap("1. ", "") },
-    { icon: Table, label: "表格", action: () => onInsert("\n| 表头1 | 表头2 |\n|------|------|\n| 内容1 | 内容2 |\n") },
-    { icon: Minus, label: "分隔线", action: () => onInsert("\n---\n") },
-    { icon: CheckSquare, label: "任务", action: () => onInsert("\n:::task\n- [ ] 待办任务一\n- [x] 已完成任务\n:::\n") },
-  ]
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: compact ? "4px" : "2px",
-        padding: compact ? "6px 12px" : "4px 8px",
-        background: "#0d0d0f",
-        borderBottom: "1px solid rgba(255,255,255,0.05)",
-        flexWrap: compact ? "nowrap" : "wrap",
-        flexShrink: 0,
-        overflowX: compact ? "auto" : undefined,
-        scrollbarWidth: compact ? "none" : undefined,
-      }}
-    >
-      {tools.map((tool) => (
-        <button
-          key={tool.label}
-          aria-label={tool.label}
-          onClick={tool.action}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: compact ? "36px" : "28px",
-            height: compact ? "36px" : "28px",
-            flexShrink: 0,
-            color: "rgba(255,255,255,0.55)",
-            background: "transparent",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            transition: "all 0.15s ease",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.08)"
-            e.currentTarget.style.color = "#fff"
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent"
-            e.currentTarget.style.color = "rgba(255,255,255,0.55)"
-          }}
-          title={tool.label}
-        >
-          <tool.icon size={compact ? 18 : 15} />
-        </button>
-      ))}
-    </div>
-  )
 }
 
 export default function EditorWorkspace() {
@@ -209,16 +65,15 @@ export default function EditorWorkspace() {
   const [isDragging, setIsDragging] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [mobileTab, setMobileTab] = useState<"edit" | "preview">("edit")
-  const [themeOpen, setThemeOpen] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [savedAt, setSavedAt] = useState<string | null>(null)
   const [showHelp, setShowHelp] = useState(false)
   const [showShortcuts, setShowShortcuts] = useState(false)
   const [moreOpen, setMoreOpen] = useState(false)
+  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop")
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const imageInputRef = useRef<HTMLInputElement>(null)
-  const themeDropdownRef = useRef<HTMLDivElement>(null)
   const moreMenuRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const markdownRef = useRef(markdown)
@@ -239,12 +94,6 @@ export default function EditorWorkspace() {
   // Close theme dropdown on outside click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (
-        themeDropdownRef.current &&
-        !themeDropdownRef.current.contains(e.target as Node)
-      ) {
-        setThemeOpen(false)
-      }
       if (
         moreMenuRef.current &&
         !moreMenuRef.current.contains(e.target as Node)
@@ -283,6 +132,17 @@ export default function EditorWorkspace() {
       ),
     [markdown, title, activeTheme]
   )
+
+  // Live WeChat-compatibility checks so the author sees problems before copying.
+  const wechatCheck = useMemo(() => {
+    if (typeof document === "undefined") return { errors: [], warnings: [] }
+    return validateWeChatHtml(previewHtml)
+  }, [previewHtml])
+  const imageCompat = useMemo(
+    () => getImageCompatibility(previewHtml),
+    [previewHtml]
+  )
+  const [imgWarnDismissedCount, setImgWarnDismissedCount] = useState(-1)
 
   // Debounce preview display so heavy rendering doesn't block typing.
   // Copy/export still use the live previewHtml.
@@ -693,146 +553,11 @@ export default function EditorWorkspace() {
         <VDiv />
 
         {/* Theme selector */}
-        <div
-          ref={themeDropdownRef}
-          style={{ position: "relative", flexShrink: 0 }}
-        >
-          <button
-            aria-label="选择排版主题"
-            aria-haspopup="listbox"
-            aria-expanded={themeOpen}
-            onClick={() => setThemeOpen(!themeOpen)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              fontFamily: "var(--font-sans)",
-              fontSize: "12px",
-              color: "rgba(255,255,255,0.7)",
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: "6px",
-              padding: isMobile ? "5px 8px" : "6px 10px",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-              transition: "all 0.15s",
-            }}
-          >
-            <span
-              style={{
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                background: activeThemeData.previewBg,
-                border: "1px solid rgba(255,255,255,0.2)",
-                display: "inline-block",
-              }}
-            />
-            <span>{activeThemeData.name}</span>
-            <ChevronDown
-              size={12}
-              style={{
-                transform: themeOpen ? "rotate(180deg)" : "rotate(0)",
-                transition: "transform 0.15s",
-                opacity: 0.6,
-              }}
-            />
-          </button>
-          {themeOpen && (
-            <div
-              id="theme-dropdown"
-              role="listbox"
-              aria-label="排版主题"
-              style={{
-                position: "absolute",
-                top: "calc(100% + 4px)",
-                right: 0,
-                background: "#1c1c1f",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "10px",
-                padding: "6px 0",
-                minWidth: "170px",
-                zIndex: 100,
-                maxHeight: "380px",
-                overflow: "auto",
-              }}
-            >
-              {themeCategories.map((cat) => (
-                <div key={cat.label}>
-                  <div
-                    style={{
-                      fontFamily: "var(--font-sans)",
-                      fontSize: "10px",
-                      color: "var(--color-metal-dark)",
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      padding: "6px 14px 3px",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {cat.label}
-                  </div>
-                  {cat.themes.map((theme) => (
-                    <button
-                      key={theme.id}
-                      role="option"
-                      aria-selected={activeTheme === theme.id}
-                      onClick={() => {
-                        setActiveTheme(theme.id)
-                        setThemeOpen(false)
-                      }}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        width: "100%",
-                        padding: "6px 14px",
-                        fontFamily: "var(--font-sans)",
-                        fontSize: "13px",
-                        color:
-                          activeTheme === theme.id
-                            ? "#f25b29"
-                            : "rgba(255,255,255,0.75)",
-                        background:
-                          activeTheme === theme.id
-                            ? "rgba(242,91,41,0.08)"
-                            : "transparent",
-                        border: "none",
-                        cursor: "pointer",
-                        textAlign: "left",
-                        transition: "all 0.1s",
-                      }}
-                      onMouseEnter={(e) => {
-                        if (activeTheme !== theme.id)
-                          e.currentTarget.style.background =
-                            "rgba(255,255,255,0.04)"
-                      }}
-                      onMouseLeave={(e) => {
-                        if (activeTheme !== theme.id)
-                          e.currentTarget.style.background = "transparent"
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: "14px",
-                          height: "14px",
-                          borderRadius: "4px",
-                          background: theme.previewBg,
-                          border:
-                            activeTheme === theme.id
-                              ? "2px solid #f25b29"
-                              : "1px solid rgba(255,255,255,0.15)",
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span>{theme.name}</span>
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <ThemeDropdown
+          activeTheme={activeTheme}
+          onSelect={setActiveTheme}
+          isMobile={isMobile}
+        />
 
         <VDiv />
 
@@ -932,6 +657,62 @@ export default function EditorWorkspace() {
               : ""}
         </div>
       </div>
+
+      {/* WeChat compatibility warnings */}
+      {wechatCheck.errors.length > 0 && (
+        <div
+          style={{
+            margin: "10px 12px 0",
+            padding: "10px 14px",
+            background: "#fef2f2",
+            border: "1px solid #fecaca",
+            borderRadius: "8px",
+            color: "#b91c1c",
+            fontSize: "12.5px",
+            lineHeight: 1.5,
+          }}
+        >
+          ⛔ 当前排版存在公众号不兼容问题，粘贴后可能丢失样式：
+          {wechatCheck.errors.join("；")}
+        </div>
+      )}
+      {imageCompat.incompatible > 0 &&
+        imgWarnDismissedCount !== imageCompat.incompatible && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "10px",
+              margin: "10px 12px 0",
+              padding: "10px 14px",
+              background: "#fff7ed",
+              border: "1px solid #fed7aa",
+              borderRadius: "8px",
+              color: "#9a3412",
+              fontSize: "12.5px",
+              lineHeight: 1.5,
+            }}
+          >
+            <span style={{ flex: 1 }}>
+              ⚠️ 检测到 {imageCompat.incompatible} 张图片使用了 data:/blob:/相对路径，公众号无法自动上传，粘贴后将<strong>不显示</strong>。请改用公网 https 图片地址，或在公众号编辑器内单独粘贴图片。
+            </span>
+            <button
+              onClick={() => setImgWarnDismissedCount(imageCompat.incompatible)}
+              aria-label="关闭提示"
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "#9a3412",
+                cursor: "pointer",
+                fontSize: "15px",
+                lineHeight: 1,
+                padding: 0,
+              }}
+            >
+              ×
+            </button>
+          </div>
+        )}
 
       {/* ═══ Editor + Preview Grid ═══ */}
       <div
@@ -1099,6 +880,45 @@ export default function EditorWorkspace() {
             >
               预览 · {activeThemeData.name}
             </span>
+            <div style={{ display: "flex", gap: "4px" }}>
+              {[
+                { mode: "desktop" as const, icon: Monitor, label: "桌面" },
+                { mode: "mobile" as const, icon: Smartphone, label: "手机" },
+              ].map(({ mode, icon: Icon, label }) => (
+                <button
+                  key={mode}
+                  aria-label={`${label}预览`}
+                  aria-pressed={previewMode === mode}
+                  onClick={() => setPreviewMode(mode)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "11px",
+                    color:
+                      previewMode === mode
+                        ? "#f25b29"
+                        : "rgba(0,0,0,0.45)",
+                    background:
+                      previewMode === mode
+                        ? "rgba(242,91,41,0.08)"
+                        : "transparent",
+                    border:
+                      previewMode === mode
+                        ? "1px solid rgba(242,91,41,0.25)"
+                        : "1px solid rgba(0,0,0,0.08)",
+                    borderRadius: "6px",
+                    padding: "4px 8px",
+                    cursor: "pointer",
+                    transition: "all 0.15s",
+                  }}
+                >
+                  <Icon size={13} />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div
@@ -1111,6 +931,19 @@ export default function EditorWorkspace() {
             <div
               role="region"
               aria-label="排版预览"
+              style={{
+                width: previewMode === "mobile" ? 375 : "100%",
+                maxWidth: "100%",
+                margin: "0 auto",
+                minHeight: "100%",
+                background: "#fff",
+                boxShadow:
+                  previewMode === "mobile"
+                    ? "0 0 0 1px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.1)"
+                    : "none",
+                borderRadius: previewMode === "mobile" ? "12px" : 0,
+                overflow: "hidden",
+              }}
               dangerouslySetInnerHTML={{ __html: displayHtml }}
             />
           </div>
@@ -1178,156 +1011,10 @@ export default function EditorWorkspace() {
       )}
 
       {/* Help Modal */}
-      {showHelp && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="help-title"
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setShowHelp(false)
-          }}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            background: "rgba(10,10,11,0.85)",
-            backdropFilter: "blur(4px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "24px",
-          }}
-          onClick={() => setShowHelp(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#1c1c1f",
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: "12px",
-              maxWidth: "520px",
-              width: "100%",
-              maxHeight: "80vh",
-              overflow: "auto",
-              padding: "28px",
-              color: "#fff",
-            }}
-          >
-            <h2 id="help-title" style={{ margin: "0 0 16px", fontSize: "20px" }}>欢迎使用墨排</h2>
-            <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "20px" }}>
-              墨排是一款免费的 Markdown 转微信公众号排版工具。左侧编辑，右侧预览，一键复制即可粘贴到公众号编辑器。
-            </p>
-            <h3 style={{ fontSize: "14px", marginBottom: "10px" }}>快速上手</h3>
-            <ol style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.8, paddingLeft: "20px", marginBottom: "20px" }}>
-              <li>在左侧输入或导入 Markdown 内容</li>
-              <li>从顶部主题下拉框选择喜欢的排版风格</li>
-              <li>点击右上角「复制」按钮，粘贴到公众号编辑器</li>
-            </ol>
-            <h3 style={{ fontSize: "14px", marginBottom: "10px" }}>图片支持</h3>
-            <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "20px" }}>
-              支持点击上传、粘贴截图、拖拽文件三种方式插入图片。图片会自动以 Base64 形式嵌入，无需额外图床。
-            </p>
-            <h3 style={{ fontSize: "14px", marginBottom: "10px" }}>草稿说明</h3>
-            <p style={{ color: "rgba(255,255,255,0.7)", lineHeight: 1.7, marginBottom: "20px" }}>
-              内容会实时备份到当前浏览器标签页，刷新不丢失；关闭标签页或浏览器后草稿会自动清除，保护你的隐私。重要内容请及时导出 HTML。
-            </p>
-            <button
-              onClick={() => setShowHelp(false)}
-              style={{
-                marginTop: "8px",
-                padding: "8px 20px",
-                background: "#f25b29",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
-            >
-              知道了
-            </button>
-          </div>
-        </div>
-      )}
+      {showHelp && <HelpModal onClose={() => setShowHelp(false)} />}
 
       {/* Shortcuts Modal */}
-      {showShortcuts && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="shortcuts-title"
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setShowShortcuts(false)
-          }}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            background: "rgba(10,10,11,0.85)",
-            backdropFilter: "blur(4px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "24px",
-          }}
-          onClick={() => setShowShortcuts(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "#1c1c1f",
-              border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: "12px",
-              maxWidth: "420px",
-              width: "100%",
-              maxHeight: "80vh",
-              overflow: "auto",
-              padding: "28px",
-              color: "#fff",
-            }}
-          >
-            <h2 id="shortcuts-title" style={{ margin: "0 0 16px", fontSize: "20px" }}>快捷键</h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {[
-                ["复制 HTML", "Ctrl / Cmd + Shift + C"],
-                ["加粗", "Ctrl / Cmd + B"],
-                ["斜体", "Ctrl / Cmd + I"],
-                ["全屏编辑", "点击右上角按钮"],
-              ].map(([action, key]) => (
-                <div key={action} style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span style={{ color: "rgba(255,255,255,0.7)" }}>{action}</span>
-                  <kbd
-                    style={{
-                      background: "rgba(255,255,255,0.1)",
-                      padding: "2px 8px",
-                      borderRadius: "4px",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: "12px",
-                    }}
-                  >
-                    {key}
-                  </kbd>
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowShortcuts(false)}
-              style={{
-                marginTop: "24px",
-                padding: "8px 20px",
-                background: "#f25b29",
-                color: "#fff",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
-            >
-              关闭
-            </button>
-          </div>
-        </div>
-      )}
+      {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
     </section>
   )
 }

@@ -9,10 +9,15 @@ lerna-debug.log*
 
 node_modules
 dist
+tmp
 dist-ssr
 *.local
 .env
 .env.*
+
+# Agent / IDE local state (not for the public repo)
+.workbuddy/
+.kimi-code/
 
 # Editor directories and files
 .vscode/*

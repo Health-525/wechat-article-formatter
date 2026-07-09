@@ -27,13 +27,13 @@ const STYLE_KEYS = [
 ] as const
 
 describe("themes", () => {
-  it("exports 12 themes grouped into categories", () => {
-    expect(themes).toHaveLength(12)
+  it("exports 21 themes grouped into categories", () => {
+    expect(themes).toHaveLength(21)
     const totalInCategories = themeCategories.reduce(
       (sum, cat) => sum + cat.themes.length,
       0
     )
-    expect(totalInCategories).toBe(12)
+    expect(totalInCategories).toBe(21)
   })
 
   it.each(themes.map((t) => [t.id, t] as const))(

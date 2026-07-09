@@ -17,6 +17,8 @@ export interface Theme {
   description: string
   previewBg: string
   category: string
+  accent: string
+  headingNumberStyle?: "plain" | "badge" | "outline"
   styles: ThemeStyles
 }
 
@@ -52,10 +54,10 @@ const MONO = "'SF Mono',Monaco,'Source Code Pro','Fira Code','Cascadia Code',mon
 
 // ─── Typography tokens ───
 const BASE = {
-  fontSize: 15,
+  fontSize: 16,
   lineHeight: 1.8,
   letterSpacing: 0.5,
-  paragraphGap: 14,
+  paragraphGap: 16,
   headingGapTop: 32,
   headingGapBottom: 12,
   wordBreak: "word-break:break-word;",
@@ -93,6 +95,7 @@ interface ThemeMeta {
   description: string
   previewBg: string
   category: string
+  headingNumberStyle?: "plain" | "badge" | "outline"
 }
 
 interface ThemeTokens {
@@ -216,6 +219,8 @@ function createTheme(
 
   return {
     ...meta,
+    accent,
+    headingNumberStyle: meta.headingNumberStyle,
     styles: { ...styles, ...overrides },
   }
 }
@@ -307,6 +312,7 @@ const t03 = createTheme(
     description: "东方气韵",
     previewBg: "#f9f6f1",
     category: "文艺",
+    headingNumberStyle: "outline",
   },
   {
     width: WIDTH.narrow,
@@ -331,7 +337,7 @@ const t03 = createTheme(
     paragraphGap: 16,
     radius: RADIUS.sharp,
     indent: true,
-    justify: true,
+    justify: false,
   },
   {
     title: "font-size:24px;font-weight:700;color:#2c1810;line-height:1.4;margin-bottom:12px;text-align:center;letter-spacing:4px;font-family:'Noto Serif SC','Songti SC',serif;",
@@ -378,7 +384,7 @@ const t04 = createTheme(
     headingAlign: "center",
     lineHeight: 1.9,
     radius: RADIUS.round,
-    justify: true,
+    justify: false,
   },
   {
     title: "font-size:24px;font-weight:400;color:#4a4038;line-height:1.3;margin-bottom:10px;text-align:center;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;font-style:italic;",
@@ -403,6 +409,7 @@ const t05 = createTheme(
     description: "街头态度",
     previewBg: "#0a0a0a",
     category: "潮流",
+    headingNumberStyle: "badge",
   },
   {
     width: WIDTH.wide,
@@ -458,6 +465,7 @@ const t06 = createTheme(
     description: "未来科技",
     previewBg: "#060a10",
     category: "潮流",
+    headingNumberStyle: "badge",
   },
   {
     width: WIDTH.wide,
@@ -506,17 +514,18 @@ const t07 = createTheme(
     description: "高级时尚",
     previewBg: "#ffffff",
     category: "时尚",
+    headingNumberStyle: "outline",
   },
   {
     width: WIDTH.narrow,
     bg: "#ffffff",
     text: "#3f3f3f",
-    textHeading: "#000000",
+    textHeading: "#1a1a1a",
     textSecondary: "#888888",
-    accent: "#000000",
+    accent: "#1a1a1a",
     surface: "#faf9f6",
     border: "#e8e8e8",
-    link: "#000000",
+    link: "#1a1a1a",
     codeBg: "#1c1c1e",
     codeText: "#f5f5f7",
     codeInlineBg: "#f5f5f7",
@@ -526,19 +535,19 @@ const t07 = createTheme(
     headingAlign: "center",
     lineHeight: 2.0,
     radius: RADIUS.sharp,
-    justify: true,
+    justify: false,
   },
   {
-    title: "font-size:28px;font-weight:400;color:#000000;line-height:1.15;margin-bottom:12px;text-align:center;letter-spacing:2px;font-family:'Noto Serif SC','Songti SC',serif;font-style:italic;",
+    title: "font-size:28px;font-weight:400;color:#1a1a1a;line-height:1.15;margin-bottom:12px;text-align:center;letter-spacing:2px;font-family:'Noto Serif SC','Songti SC',serif;font-style:italic;",
     subtitle: "font-size:10px;color:#888888;text-align:center;margin-bottom:40px;letter-spacing:4px;text-transform:uppercase;font-family:'PingFang SC',sans-serif;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;padding:12px 0;",
-    h1: "font-size:19px;font-weight:600;color:#000000;margin:36px 0 14px;padding-bottom:12px;border-bottom:1px solid #000000;text-align:center;font-style:italic;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;",
+    h1: "font-size:19px;font-weight:600;color:#1a1a1a;margin:36px 0 14px;padding-bottom:12px;border-bottom:1px solid #1a1a1a;text-align:center;font-style:italic;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;",
     h2: "font-size:15px;font-weight:600;color:#1a1a1a;margin:26px 0 12px;text-align:center;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;padding:0 16px;",
     h3: "font-size:11px;font-weight:600;color:#666666;margin:18px 0 8px;text-transform:uppercase;letter-spacing:3px;font-family:'PingFang SC',sans-serif;text-align:center;",
     blockquote: "margin:28px 0;padding:24px 28px;background:#faf9f6;color:#1a1a1a;font-size:15px;line-height:2.0;text-align:center;font-family:'Noto Serif SC','Songti SC',serif;font-style:italic;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0;",
-    strong: "font-weight:700;color:#000000;font-family:'Noto Serif SC','Songti SC',serif;",
+    strong: "font-weight:700;color:#1a1a1a;font-family:'Noto Serif SC','Songti SC',serif;",
     img: "max-width:100%;height:auto;display:block;margin:24px auto;",
-    table: "width:100%;border-collapse:collapse;margin:20px 0;font-size:13px;border-top:2px solid #000;border-bottom:2px solid #000;",
-    th: "padding:12px 10px;border-bottom:1px solid #000;text-align:center;font-weight:600;font-family:'Noto Serif SC',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;",
+    table: "width:100%;border-collapse:collapse;margin:20px 0;font-size:13px;border-top:2px solid #1a1a1a;border-bottom:2px solid #1a1a1a;",
+    th: "padding:12px 10px;border-bottom:1px solid #1a1a1a;text-align:center;font-weight:600;font-family:'Noto Serif SC',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;",
     td: "padding:12px 10px;border-bottom:1px solid #e0e0e0;text-align:center;",
     hr: "border:none;height:1px;background:#e8e8e8;margin:36px 0;",
   }
@@ -574,7 +583,7 @@ const t08 = createTheme(
     headingAlign: "center",
     lineHeight: 2.0,
     radius: RADIUS.sharp,
-    justify: true,
+    justify: false,
   },
   {
     title: "font-size:24px;font-weight:400;color:#3d2b1f;line-height:1.35;margin-bottom:12px;text-align:center;letter-spacing:3px;font-family:'Noto Serif SC','Songti SC',serif;",
@@ -739,6 +748,7 @@ const t12 = createTheme(
     description: "庄重大气",
     previewBg: "#fdf6f0",
     category: "国风",
+    headingNumberStyle: "badge",
   },
   {
     width: WIDTH.narrow,
@@ -763,7 +773,7 @@ const t12 = createTheme(
     paragraphGap: 14,
     radius: RADIUS.sharp,
     indent: true,
-    justify: true,
+    justify: false,
   },
   {
     title: "font-size:26px;font-weight:700;color:#b22222;line-height:1.4;margin-bottom:12px;text-align:center;letter-spacing:4px;font-family:'Noto Serif SC','Songti SC',serif;",
@@ -785,9 +795,394 @@ const t12 = createTheme(
 //  EXPORT
 // ═══════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════
+//  13–18 gzh-design skill themes
+//  Ported from https://github.com/isjiamu/gzh-design-skill
+//  with WeChat-safe inline styles and <span leaf> wrapping.
+// ═══════════════════════════════════════════════════════════
+
+const t13 = createTheme(
+  {
+    id: "moyu-green",
+    name: "摸鱼绿",
+    description: "绿色杂志风",
+    previewBg: "#ffffff",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#ffffff",
+    text: "#374151",
+    textHeading: "#111827",
+    textSecondary: "#6B7280",
+    accent: "#059669",
+    surface: "#F0FDF4",
+    border: "#BBF7D0",
+    link: "#059669",
+    codeBg: "#1E293B",
+    codeText: "#E2E8F0",
+    codeInlineBg: "#ECFDF5",
+    codeInlineText: "#059669",
+    fontBody: "sans",
+    fontHeading: "sans",
+    bodySize: 14,
+    lineHeight: 1.9,
+    letterSpacing: 0.5,
+    paragraphGap: 14,
+    radius: RADIUS.round,
+  },
+  {
+    h1: "font-size:18px;font-weight:800;color:#111827;margin:32px 0 12px;padding-bottom:10px;border-bottom:2px solid #059669;line-height:1.4;letter-spacing:0.5px;",
+    h2: "font-size:16px;font-weight:700;color:#111827;margin:26px 0 10px;padding-left:12px;border-left:3px solid #059669;line-height:1.4;letter-spacing:0.3px;",
+    strong: "font-weight:700;color:#111827;background:#FDE68A;padding:1px 5px;border-radius:3px;",
+    blockquote: "margin:22px 0;padding:14px 16px;background:#F0FDF4;border-left:3px solid #059669;color:#374151;font-size:14px;line-height:1.9;border-radius:0 10px 10px 0;",
+  }
+)
+
+const t14 = createTheme(
+  {
+    id: "red-white",
+    name: "红白色系",
+    description: "经典编辑风",
+    previewBg: "#ffffff",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#ffffff",
+    text: "#374151",
+    textHeading: "#1C1917",
+    textSecondary: "#9CA3AF",
+    accent: "#DC2626",
+    surface: "#FEF2F2",
+    border: "#FEE2E2",
+    link: "#DC2626",
+    codeBg: "#1E293B",
+    codeText: "#E2E8F0",
+    codeInlineBg: "#FEF2F2",
+    codeInlineText: "#DC2626",
+    fontBody: "sans",
+    fontHeading: "sans",
+    bodySize: 15,
+    lineHeight: 1.8,
+    letterSpacing: 0.5,
+    paragraphGap: 16,
+    radius: RADIUS.soft,
+  },
+  {
+    h1: "font-size:18px;font-weight:800;color:#1C1917;margin:32px 0 12px;padding-bottom:10px;border-bottom:3px solid #DC2626;line-height:1.4;letter-spacing:0.5px;",
+    h2: "font-size:16px;font-weight:700;color:#1C1917;margin:26px 0 10px;padding-left:12px;border-left:3px solid #DC2626;line-height:1.4;letter-spacing:0.3px;",
+    strong: "font-weight:700;color:#1C1917;background:#FECACA;padding:1px 5px;border-radius:3px;",
+    blockquote: "margin:22px 0;padding:16px 18px;background:#FEF2F2;border-left:4px solid #DC2626;color:#991B1B;font-size:15px;line-height:1.8;border-radius:0 10px 10px 0;",
+  }
+)
+
+const t15 = createTheme(
+  {
+    id: "graphite-minimal",
+    name: "石墨极简",
+    description: "留白理性",
+    previewBg: "#FFFFFF",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#FFFFFF",
+    text: "#52525B",
+    textHeading: "#27272A",
+    textSecondary: "#A1A1AA",
+    accent: "#52525B",
+    surface: "#FAFAFA",
+    border: "#E4E4E7",
+    link: "#52525B",
+    codeBg: "#1E293B",
+    codeText: "#E2E8F0",
+    codeInlineBg: "#F4F4F5",
+    codeInlineText: "#52525B",
+    fontBody: "sans",
+    fontHeading: "sans",
+    bodySize: 15,
+    lineHeight: 1.8,
+    letterSpacing: 0.3,
+    paragraphGap: 18,
+    radius: RADIUS.sharp,
+  },
+  {
+    h1: "font-size:18px;font-weight:800;color:#27272A;margin:32px 0 12px;padding-bottom:10px;border-bottom:1px solid #E4E4E7;line-height:1.4;letter-spacing:0.3px;",
+    h2: "font-size:16px;font-weight:700;color:#27272A;margin:28px 0 10px;padding-left:12px;border-left:3px solid #52525B;line-height:1.4;letter-spacing:0.3px;",
+    strong: "font-weight:700;color:#27272A;background:#F4F4F5;padding:1px 5px;border-radius:2px;",
+    blockquote: "margin:24px 0;padding:18px 20px;background:#FAFAFA;border-left:3px solid #52525B;color:#52525B;font-size:15px;line-height:1.8;border-radius:0 2px 2px 0;",
+  }
+)
+
+const t16 = createTheme(
+  {
+    id: "zen-whitespace",
+    name: "留白禅意",
+    description: "呼吸感",
+    previewBg: "#ffffff",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#ffffff",
+    text: "#4A5D52",
+    textHeading: "#4A5D52",
+    textSecondary: "#8B9D92",
+    accent: "#4A5D52",
+    surface: "#F5F7F6",
+    border: "#D8E0DC",
+    link: "#4A5D52",
+    codeBg: "#F5F7F6",
+    codeText: "#4A5D52",
+    codeInlineBg: "#F5F7F6",
+    codeInlineText: "#4A5D52",
+    fontBody: "serif",
+    fontHeading: "serif",
+    headingAlign: "center",
+    bodySize: 15,
+    lineHeight: 2.0,
+    letterSpacing: 0.5,
+    paragraphGap: 18,
+    radius: RADIUS.sharp,
+    justify: false,
+  },
+  {
+    title: "font-size:24px;font-weight:700;color:#4A5D52;line-height:1.4;margin-bottom:12px;text-align:center;letter-spacing:2px;font-family:'Noto Serif SC','Songti SC',serif;",
+    subtitle: "font-size:12px;color:#8B9D92;text-align:center;margin-bottom:40px;letter-spacing:2px;font-family:'PingFang SC',sans-serif;",
+    h1: "font-size:18px;font-weight:700;color:#4A5D52;margin:40px 0 14px;padding-bottom:10px;border-bottom:1px solid #D8E0DC;text-align:center;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;",
+    h2: "font-size:16px;font-weight:600;color:#5A6D62;margin:30px 0 12px;text-align:center;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;",
+    strong: "font-weight:700;color:#4A5D52;background:#E8EFEA;padding:1px 5px;border-radius:2px;",
+    blockquote: "margin:28px 0;padding:22px 24px;background:#F5F7F6;color:#4A5D52;font-size:15px;line-height:2.0;text-align:center;font-family:'Noto Serif SC',serif;font-style:italic;border-top:1px solid #D8E0DC;border-bottom:1px solid #D8E0DC;",
+  }
+)
+
+const t17 = createTheme(
+  {
+    id: "moyu-ticket",
+    name: "摸鱼票据",
+    description: "票据视觉隐喻",
+    previewBg: "#ffffff",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#ffffff",
+    text: "#374151",
+    textHeading: "#111827",
+    textSecondary: "#6B7280",
+    accent: "#059669",
+    surface: "#F0FDF4",
+    border: "#BBF7D0",
+    link: "#059669",
+    codeBg: "#1E293B",
+    codeText: "#E2E8F0",
+    codeInlineBg: "#ECFDF5",
+    codeInlineText: "#059669",
+    fontBody: "sans",
+    fontHeading: "sans",
+    bodySize: 14,
+    lineHeight: 1.85,
+    letterSpacing: 0.5,
+    paragraphGap: 14,
+    radius: RADIUS.soft,
+  },
+  {
+    h1: "font-size:18px;font-weight:800;color:#111827;margin:32px 0 12px;padding-bottom:10px;border-bottom:2px dashed #059669;line-height:1.4;letter-spacing:0.5px;",
+    h2: "font-size:16px;font-weight:700;color:#111827;margin:26px 0 10px;padding-left:12px;border-left:3px solid #059669;line-height:1.4;letter-spacing:0.3px;",
+    strong: "font-weight:700;color:#111827;background:#FDE68A;padding:1px 5px;border-radius:2px;",
+    blockquote: "margin:22px 0;padding:14px 16px;background:#F0FDF4;border:1px dashed #BBF7D0;color:#374151;font-size:14px;line-height:1.85;border-radius:4px;",
+    img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:4px;border:1px solid #E5E7EB;box-shadow:0 4px 12px -2px rgba(0,0,0,0.08);",
+  }
+)
+
+const t18 = createTheme(
+  {
+    id: "olive-journal",
+    name: "橄榄手记",
+    description: "编辑部内刊质感",
+    previewBg: "#ffffff",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#ffffff",
+    text: "#1e1f23",
+    textHeading: "#1e1f23",
+    textSecondary: "#6b6d72",
+    accent: "#ed7b2f",
+    surface: "#f5f5f5",
+    border: "#e5e5e5",
+    link: "#ed7b2f",
+    codeBg: "#1e1f23",
+    codeText: "#f5f5f5",
+    codeInlineBg: "#f5f5f5",
+    codeInlineText: "#ed7b2f",
+    fontBody: "sans",
+    fontHeading: "sans",
+    bodySize: 15,
+    lineHeight: 1.85,
+    letterSpacing: 0.3,
+    paragraphGap: 16,
+    radius: RADIUS.soft,
+  },
+  {
+    h1: "font-size:18px;font-weight:800;color:#1e1f23;margin:32px 0 12px;padding-bottom:10px;border-bottom:2px solid #ed7b2f;line-height:1.4;letter-spacing:0.3px;",
+    h2: "font-size:16px;font-weight:700;color:#1e1f23;margin:26px 0 10px;padding-left:12px;border-left:3px solid #ed7b2f;line-height:1.4;letter-spacing:0.3px;",
+    strong: "font-weight:700;color:#1e1f23;background:#f5f5f5;padding:1px 5px;border-radius:3px;",
+    blockquote: "margin:22px 0;padding:16px 18px;background:#f5f5f5;border-left:4px solid #ed7b2f;color:#1e1f23;font-size:15px;line-height:1.85;border-radius:0 8px 8px 0;",
+  }
+)
+
+// ═══════════════════════════════════════════════════════════
+//  19 暖墨 —— 温柔克制，陶土红 + 衬线标题
+// ═══════════════════════════════════════════════════════════
+
+const t19 = createTheme(
+  {
+    id: "warm-ink",
+    name: "暖墨",
+    description: "温柔手记风",
+    previewBg: "#FDFBF7",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#FDFBF7",
+    text: "#4A403A",
+    textHeading: "#2E2622",
+    textSecondary: "#7A6E65",
+    accent: "#B85C50",
+    surface: "#F7F2EC",
+    border: "#E0D5CC",
+    link: "#B85C50",
+    codeBg: "#2E2622",
+    codeText: "#F7F2EC",
+    codeInlineBg: "#F7F2EC",
+    codeInlineText: "#B85C50",
+    fontBody: "sans",
+    fontHeading: "serif",
+    bodySize: 15,
+    lineHeight: 1.9,
+    letterSpacing: 0.3,
+    paragraphGap: 16,
+    radius: RADIUS.round,
+  },
+  {
+    title: "font-size:24px;font-weight:700;color:#2E2622;line-height:1.35;margin-bottom:12px;text-align:center;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;",
+    subtitle: "font-size:13px;color:#7A6E65;text-align:center;margin-bottom:36px;letter-spacing:1px;font-style:italic;",
+    h1: "font-size:18px;font-weight:700;color:#2E2622;margin:36px 0 12px;padding-bottom:10px;border-bottom:1px solid #E0D5CC;line-height:1.4;letter-spacing:0.5px;font-family:'Noto Serif SC','Songti SC',serif;",
+    h2: "font-size:16px;font-weight:700;color:#2E2622;margin:28px 0 10px;padding-left:12px;border-left:3px solid #B85C50;line-height:1.4;letter-spacing:0.3px;font-family:'Noto Serif SC','Songti SC',serif;",
+    h3: "font-size:15px;font-weight:700;color:#B85C50;margin:20px 0 8px;line-height:1.4;letter-spacing:0.3px;font-family:'Noto Serif SC','Songti SC',serif;",
+    strong: "font-weight:700;color:#2E2622;background:#FCE8E4;padding:1px 5px;border-radius:3px;",
+    blockquote: "margin:24px 0;padding:18px 20px;background:#F7F2EC;border-left:3px solid #B85C50;color:#2E2622;font-size:15px;line-height:1.85;border-radius:0 10px 10px 0;font-style:italic;font-family:'Noto Serif SC',serif;",
+    img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:8px;border:1px solid #E0D5CC;",
+    hr: "border:none;height:1px;background:repeating-linear-gradient(90deg,transparent,transparent 8px,#E0D5CC 8px,#E0D5CC 16px,transparent 16px,transparent 24px);margin:32px 0;",
+  }
+)
+
+// ═══════════════════════════════════════════════════════════
+//  20 智思手记 —— 为 AI / 技术学习者设计，暖灰底 + 深青强调
+// ═══════════════════════════════════════════════════════════
+
+const t20 = createTheme(
+  {
+    id: "ai-notebook",
+    name: "智思手记",
+    description: "AI 学习手记",
+    previewBg: "#F8FAFA",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#F8FAFA",
+    text: "#3D4F56",
+    textHeading: "#1E2E33",
+    textSecondary: "#5F737A",
+    accent: "#2E6B75",
+    surface: "#EDF2F2",
+    border: "#D7E0E3",
+    link: "#2E6B75",
+    codeBg: "#263238",
+    codeText: "#ECEFF1",
+    codeInlineBg: "#EDF2F2",
+    codeInlineText: "#2E6B75",
+    fontBody: "sans",
+    fontHeading: "serif",
+    bodySize: 15,
+    lineHeight: 1.85,
+    letterSpacing: 0.3,
+    paragraphGap: 16,
+    radius: RADIUS.round,
+  },
+  {
+    title: "font-size:24px;font-weight:700;color:#1E2E33;line-height:1.35;margin-bottom:12px;text-align:center;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;",
+    subtitle: "font-size:13px;color:#5F737A;text-align:center;margin-bottom:36px;letter-spacing:1px;font-style:italic;",
+    h1: "font-size:18px;font-weight:700;color:#1E2E33;margin:36px 0 12px;padding-bottom:10px;border-bottom:1px solid #D7E0E3;line-height:1.4;letter-spacing:0.5px;font-family:'Noto Serif SC','Songti SC',serif;",
+    h2: "font-size:16px;font-weight:700;color:#1E2E33;margin:28px 0 10px;padding-left:12px;border-left:3px solid #2E6B75;line-height:1.4;letter-spacing:0.3px;font-family:'Noto Serif SC','Songti SC',serif;",
+    h3: "font-size:15px;font-weight:700;color:#2E6B75;margin:20px 0 8px;line-height:1.4;letter-spacing:0.3px;font-family:'Noto Serif SC','Songti SC',serif;",
+    strong: "font-weight:700;color:#1E2E33;background:#D9ECEF;padding:1px 5px;border-radius:3px;",
+    blockquote: "margin:24px 0;padding:18px 20px;background:#EDF2F2;border-left:3px solid #2E6B75;color:#1E2E33;font-size:15px;line-height:1.85;border-radius:0 10px 10px 0;font-style:italic;font-family:'Noto Serif SC',serif;",
+    img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:8px;border:1px solid #D7E0E3;",
+    hr: "border:none;height:1px;background:repeating-linear-gradient(90deg,transparent,transparent 8px,#D7E0E3 8px,#D7E0E3 16px,transparent 16px,transparent 24px);margin:32px 0;",
+  }
+)
+
+// ═══════════════════════════════════════════════════════════
+//  21 紫墨 —— 淡紫底 + 烟紫强调，静谧手记风
+// ═══════════════════════════════════════════════════════════
+
+const t21 = createTheme(
+  {
+    id: "purple-ink",
+    name: "紫墨",
+    description: "淡紫静谧手记",
+    previewBg: "#FAF8FB",
+    category: "gzh-design",
+  },
+  {
+    width: 677,
+    bg: "#FAF8FB",
+    text: "#4A3F4A",
+    textHeading: "#2E2333",
+    textSecondary: "#7D6E80",
+    accent: "#7C4D9E",
+    surface: "#F2EDF5",
+    border: "#DDD5E1",
+    link: "#7C4D9E",
+    codeBg: "#2E2333",
+    codeText: "#F2EDF5",
+    codeInlineBg: "#F2EDF5",
+    codeInlineText: "#7C4D9E",
+    fontBody: "sans",
+    fontHeading: "serif",
+    bodySize: 15,
+    lineHeight: 1.9,
+    letterSpacing: 0.3,
+    paragraphGap: 16,
+    radius: RADIUS.round,
+  },
+  {
+    title: "font-size:24px;font-weight:700;color:#2E2333;line-height:1.35;margin-bottom:12px;text-align:center;letter-spacing:1px;font-family:'Noto Serif SC','Songti SC',serif;",
+    subtitle: "font-size:13px;color:#7D6E80;text-align:center;margin-bottom:36px;letter-spacing:1px;font-style:italic;",
+    h1: "font-size:18px;font-weight:700;color:#2E2333;margin:36px 0 12px;padding-bottom:10px;border-bottom:1px solid #DDD5E1;line-height:1.4;letter-spacing:0.5px;font-family:'Noto Serif SC','Songti SC',serif;",
+    h2: "font-size:16px;font-weight:700;color:#2E2333;margin:28px 0 10px;line-height:1.4;letter-spacing:0.3px;font-family:'Noto Serif SC','Songti SC',serif;",
+    h3: "font-size:15px;font-weight:700;color:#7C4D9E;margin:20px 0 8px;line-height:1.4;letter-spacing:0.3px;font-family:'Noto Serif SC','Songti SC',serif;",
+    strong: "font-weight:700;color:#2E2333;background:#F0E3F7;padding:1px 5px;border-radius:3px;",
+    blockquote: "margin:24px 0;padding:18px 20px;background:#F2EDF5;color:#2E2333;font-size:15px;line-height:1.85;border-radius:10px;font-style:italic;font-family:'Noto Serif SC',serif;",
+    img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:8px;border:1px solid #DDD5E1;",
+    hr: "border:none;height:1px;background:repeating-linear-gradient(90deg,transparent,transparent 8px,#DDD5E1 8px,#DDD5E1 16px,transparent 16px,transparent 24px);margin:32px 0;",
+  }
+)
+
+// ═══════════════════════════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════════════════════════
+
 export const themes: Theme[] = [
   t01, t02, t03, t04, t05, t06,
   t07, t08, t09, t10, t11, t12,
+  t13, t14, t15, t16, t17, t18, t19, t20, t21,
 ]
 
 export const defaultTheme = themes[0]
@@ -800,4 +1195,5 @@ export const themeCategories = [
   { label: "治愈", themes: [t09, t10] },
   { label: "商务", themes: [t11] },
   { label: "国风", themes: [t12] },
+  { label: "gzh-design", themes: [t13, t14, t15, t16, t17, t18, t19, t20, t21] },
 ]

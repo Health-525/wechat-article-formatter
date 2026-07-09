@@ -88,17 +88,8 @@
    ============================ */
 
 /* Smooth button transitions */
-.editor-topbar button,
 .mobile-tab-bar button {
   transition: all 0.15s ease !important;
-}
-
-.editor-topbar button:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
-}
-
-.editor-topbar button:active {
-  transform: scale(0.96);
 }
 
 /* Copy button success animation */
@@ -176,12 +167,6 @@
 /* Image in preview hover effect */
 .mobile-preview-panel img {
   transition: opacity 0.2s ease;
-}
-
-/* Input focus states */
-.editor-topbar input:focus {
-  border-color: rgba(242, 91, 41, 0.4) !important;
-  box-shadow: 0 0 0 2px rgba(242, 91, 41, 0.1);
 }
 
 /* Smooth page transitions */
