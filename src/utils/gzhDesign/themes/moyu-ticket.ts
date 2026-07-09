@@ -57,9 +57,9 @@ export function chapterTitle(
   const marginTop = isFirst ? "16px" : "48px"
   return `
 <section style="margin-top:${marginTop};margin-bottom:32px;padding:0 20px;">
-  <section style="display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid ${t.dark};">
-    <section style="background:${t.primary};color:#ffffff;font-size:12px;font-weight:800;padding:6px 12px;letter-spacing:2px;flex-shrink:0;">${span(number)}</section>
-    <section style="font-size:18px;font-weight:800;color:${t.title};letter-spacing:1px;">${span(title)}</section>
+  <section style="display:flex;align-items:center;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid ${t.dark};">
+    <section style="background:${t.primary};color:#ffffff;font-size:12px;font-weight:800;padding:6px 12px;letter-spacing:2px;flex-shrink:0;margin-right:12px;">${span(number)}</section>
+    <section style="font-size:18px;font-weight:800;color:${t.title};letter-spacing:1px;margin-right:12px;">${span(title)}</section>
     <section style="font-size:12px;color:${t.muted};flex-shrink:0;">${span(`/ ${label}`)}</section>
   </section>
 </section>`
@@ -147,22 +147,22 @@ export function footerCta(): string {
 <section style="padding:0 0 32px;">
   <section style="background:${t.paper};border:2px solid ${t.dark};box-shadow:4px 4px 0 ${t.dark};padding:24px 20px;text-align:center;">
     <p style="font-size:13px;font-weight:700;color:${t.title};margin:0 0 20px;line-height:1.6;">${span("觉得这张‘票据’值得留存？欢迎点赞、在看、星标三连。")}</p>
-    <section style="display:flex;justify-content:center;gap:24px;margin-bottom:16px;">
-      <section style="text-align:center;color:${t.text};">
+    <section style="display:flex;justify-content:center;margin-bottom:16px;">
+      <section style="text-align:center;margin:0 12px;color:${t.text};">
         <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:#ffffff;border:1px solid ${t.dark};">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+          <span style="font-size:20px;line-height:1;">${span("👍")}</span>
         </section>
         <span style="font-size:10px;font-weight:600;">${span("点赞")}</span>
       </section>
-      <section style="text-align:center;color:${t.text};">
+      <section style="text-align:center;margin:0 12px;color:${t.text};">
         <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:#ffffff;border:1px solid ${t.dark};">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path></svg>
+          <span style="font-size:20px;line-height:1;">${span("👁")}</span>
         </section>
         <span style="font-size:10px;font-weight:600;">${span("在看")}</span>
       </section>
-      <section style="text-align:center;color:${t.primary};">
+      <section style="text-align:center;margin:0 12px;color:${t.primary};">
         <section style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:${t.lightGreenBg};border:2px solid ${t.primary};">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span style="font-size:20px;line-height:1;">${span("⭐")}</span>
         </section>
         <span style="font-size:10px;font-weight:600;">${span("星标")}</span>
       </section>
@@ -255,8 +255,8 @@ export function toc(chapters: Array<{ number: string; title: string }>): string 
       const isLast = index === chapters.length - 1
       const borderBottom = isLast ? "0" : `1px dashed ${t.accent}`
       return `
-    <section style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:${borderBottom};">
-      <section style="min-width:64px;flex-shrink:0;text-align:left;">
+    <section style="display:flex;align-items:center;padding:10px 0;border-bottom:${borderBottom};">
+      <section style="min-width:64px;flex-shrink:0;text-align:left;margin-right:12px;">
         <section style="font-size:16px;font-weight:900;color:${t.primary};letter-spacing:0.5px;line-height:1;">${span(chapter.number)}</section>
       </section>
       <section style="flex:1;font-size:14px;font-weight:600;color:${t.title};line-height:1.4;">${span(chapter.title)}</section>
@@ -281,8 +281,8 @@ export function subheading(title: string): string {
   const t = DESIGN_TOKENS
   return `
 <section style="margin-bottom:32px;padding:0 20px;">
-  <section style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
-    <section style="width:4px;height:16px;background:${t.primary};"><span leaf=""><br></span></section>
+  <section style="display:flex;align-items:center;margin-bottom:16px;">
+    <section style="width:4px;height:16px;background:${t.primary};margin-right:8px;"><span leaf=""><br></span></section>
     <section style="font-size:15px;font-weight:700;color:${t.title};">${span(title)}</section>
   </section>
 </section>`
@@ -308,8 +308,8 @@ export function list(items: string[], ordered = false): string {
 
   const itemsHtml = items
     .map((item) => `
-  <section style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;">
-    <section style="flex-shrink:0;width:6px;height:6px;background:${t.primary};margin-top:10px;"><span leaf=""><br></span></section>
+  <section style="display:flex;align-items:flex-start;margin-bottom:10px;">
+    <section style="flex-shrink:0;width:6px;height:6px;background:${t.primary};margin-top:10px;margin-right:10px;"><span leaf=""><br></span></section>
     <section style="flex:1;font-size:${t.bodySize}px;color:${t.text};line-height:${t.lineHeight};">${span(item)}</section>
   </section>`)
     .join("")

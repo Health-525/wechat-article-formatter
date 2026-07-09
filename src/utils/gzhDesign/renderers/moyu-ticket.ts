@@ -188,12 +188,9 @@ export function render(markdown: string): string {
 
   // Footer + end mark inside the container.
   html += lib.footerCta()
-  html += `<p style="text-align:center;color:#D1D5DB;font-size:14px;margin:24px 0 0 0;">${span("/")}</p>`
+  html += `<p style="text-align:center;color:#9CA3AF;font-size:14px;margin:24px 0 0 0;">${span("/")}</p>`
 
   html = lib.container(html)
-
-  // Hidden WeChat editor marker goes outside the container.
-  html += `<p style="display:none;"><mp-style-type data-value="3"></mp-style-type></p>`
 
   // Replace math placeholders with rendered formula images.
   html = injectRenderedMathSvg(html, snippets)
