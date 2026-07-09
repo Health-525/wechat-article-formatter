@@ -992,7 +992,7 @@ const t17 = createTheme(
     h2: "font-size:16px;font-weight:700;color:#111827;margin:26px 0 10px;padding-left:12px;border-left:3px solid #059669;line-height:1.4;letter-spacing:0.3px;",
     strong: "font-weight:700;color:#111827;background:#FDE68A;padding:1px 5px;border-radius:2px;",
     blockquote: "margin:22px 0;padding:14px 16px;background:#F0FDF4;border:1px dashed #BBF7D0;color:#374151;font-size:14px;line-height:1.85;border-radius:4px;",
-    img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:4px;border:1px solid #E5E7EB;box-shadow:0 4px 12px -2px rgba(0,0,0,0.08);",
+    img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:4px;border:1px solid #E5E7EB;",
   }
 )
 
@@ -1077,7 +1077,7 @@ const t19 = createTheme(
     strong: "font-weight:700;color:#2E2622;background:#FCE8E4;padding:1px 5px;border-radius:3px;",
     blockquote: "margin:24px 0;padding:18px 20px;background:#F7F2EC;border-left:3px solid #B85C50;color:#2E2622;font-size:15px;line-height:1.85;border-radius:0 10px 10px 0;font-style:italic;font-family:'Noto Serif SC',serif;",
     img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:8px;border:1px solid #E0D5CC;",
-    hr: "border:none;height:1px;background:repeating-linear-gradient(90deg,transparent,transparent 8px,#E0D5CC 8px,#E0D5CC 16px,transparent 16px,transparent 24px);margin:32px 0;",
+    hr: "border:0;border-top:1px solid #E0D5CC;height:0;margin:32px 0;",
   }
 )
 
@@ -1124,7 +1124,7 @@ const t20 = createTheme(
     strong: "font-weight:700;color:#1E2E33;background:#D9ECEF;padding:1px 5px;border-radius:3px;",
     blockquote: "margin:24px 0;padding:18px 20px;background:#EDF2F2;border-left:3px solid #2E6B75;color:#1E2E33;font-size:15px;line-height:1.85;border-radius:0 10px 10px 0;font-style:italic;font-family:'Noto Serif SC',serif;",
     img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:8px;border:1px solid #D7E0E3;",
-    hr: "border:none;height:1px;background:repeating-linear-gradient(90deg,transparent,transparent 8px,#D7E0E3 8px,#D7E0E3 16px,transparent 16px,transparent 24px);margin:32px 0;",
+    hr: "border:0;border-top:1px solid #D7E0E3;height:0;margin:32px 0;",
   }
 )
 
@@ -1171,7 +1171,7 @@ const t21 = createTheme(
     strong: "font-weight:700;color:#2E2333;background:#F0E3F7;padding:1px 5px;border-radius:3px;",
     blockquote: "margin:24px 0;padding:18px 20px;background:#F2EDF5;color:#2E2333;font-size:15px;line-height:1.85;border-radius:10px;font-style:italic;font-family:'Noto Serif SC',serif;",
     img: "max-width:100%;height:auto;display:block;margin:20px auto;border-radius:8px;border:1px solid #DDD5E1;",
-    hr: "border:none;height:1px;background:repeating-linear-gradient(90deg,transparent,transparent 8px,#DDD5E1 8px,#DDD5E1 16px,transparent 16px,transparent 24px);margin:32px 0;",
+    hr: "border:0;border-top:1px solid #DDD5E1;height:0;margin:32px 0;",
   }
 )
 
