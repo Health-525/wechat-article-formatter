@@ -87,7 +87,7 @@ export function underline(text: string): string {
 
 export function highlight(text: string): string {
   const t = DESIGN_TOKENS
-  return `<span style="background:${t.highlightBg};color:${t.title};padding:1px 4px;border-radius:3px;font-weight:600;box-decoration-break:clone;-webkit-box-decoration-break:clone;">${span(text)}</span>`
+  return `<span style="background:${t.highlightBg};color:${t.title};padding:1px 4px;border-radius:3px;font-weight:600;">${span(text)}</span>`
 }
 
 export function quoteBox(children: string): string {
@@ -194,7 +194,7 @@ export function cover(
     ? `<p style="font-family:${t.titleFont};font-size:16px;font-weight:500;color:${t.primary};margin:14px 0 0;letter-spacing:0.5px;line-height:1.5;">${span(titleHighlight)}</p>`
     : ""
   const subtitleBlock = subtitle
-    ? `<p style="font-size:15px;color:${t.secondary};margin:18px auto 0;line-height:1.8;max-width:520px;letter-spacing:0.4px;">${subtitle}</p>`
+    ? `<p style="font-size:15px;color:${t.secondary};margin:18px auto 0;line-height:1.8;max-width:520px;letter-spacing:0.4px;">${span(subtitle)}</p>`
     : ""
   const imageBlock = image
     ? `<section style="margin:32px 0 0;padding:0 4px;"><img src="${image}" alt="封面图" style="max-width:100%;height:auto;display:block;margin:0 auto;border-radius:12px;box-shadow:0 10px 28px -12px rgba(46,35,51,0.18);"></section>`
@@ -222,10 +222,10 @@ export function toc(chapters: Array<{ number: string; title: string }>): string 
       const isConc = isLast && isConclusionTitle(chapter.title)
       const num = isConc ? "∞" : chapter.number
       return `
-<section style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:${isLast ? "none" : `1px solid ${t.divider}`};">
-  <span style="font-family:${t.titleFont};font-size:13px;font-weight:600;color:${t.primaryLight};min-width:32px;text-align:right;letter-spacing:0.5px;">${span(num)}</span>
-  <span style="width:4px;height:4px;border-radius:50%;background:${t.accent};flex-shrink:0;font-size:0;line-height:0;overflow:hidden;">${span(".")}</span>
-  <span style="font-size:14px;font-weight:500;color:${t.title};line-height:1.5;flex:1;">${span(chapter.title)}</span>
+<section style="display:flex;align-items:center;padding:10px 0;border-bottom:${isLast ? "none" : `1px solid ${t.divider}`};">
+  <span style="font-family:${t.titleFont};font-size:13px;font-weight:600;color:${t.primaryLight};min-width:32px;text-align:right;letter-spacing:0.5px;margin-right:12px;">${span(num)}</span>
+  <span style="width:4px;height:4px;border-radius:50%;background:${t.accent};flex-shrink:0;font-size:0;line-height:0;overflow:hidden;margin-right:12px;">${span(".")}</span>
+  <span style="font-size:14px;font-weight:500;color:${t.title};line-height:1.5;flex:1;margin-right:12px;">${span(chapter.title)}</span>
   <span style="font-family:${t.titleFont};font-size:12px;color:${t.muted};">${span("→")}</span>
 </section>`
     })
@@ -259,8 +259,8 @@ export function list(items: string[], ordered?: boolean): string {
     const rows = items
       .map(
         (item, index) => `
-<section style="display:flex;align-items:flex-start;gap:${gap};margin-bottom:${rowSpacing};">
-  <span style="flex-shrink:0;width:22px;height:22px;line-height:22px;text-align:center;background:${t.paper};border:1px solid ${t.divider};border-radius:50%;font-family:${t.titleFont};font-size:11px;font-weight:700;color:${t.primary};margin-top:${markerTop};">${span(String(index + 1))}</span>
+<section style="display:flex;align-items:flex-start;margin-bottom:${rowSpacing};">
+  <span style="flex-shrink:0;width:22px;height:22px;line-height:22px;text-align:center;background:${t.paper};border:1px solid ${t.divider};border-radius:50%;font-family:${t.titleFont};font-size:11px;font-weight:700;color:${t.primary};margin-top:${markerTop};margin-right:${gap};">${span(String(index + 1))}</span>
   <p style="margin:0;font-size:${t.bodySize}px;color:${t.text};line-height:${t.lineHeight};flex:1;">${item}</p>
 </section>`
       )
@@ -271,8 +271,8 @@ export function list(items: string[], ordered?: boolean): string {
   const rows = items
     .map(
       (item) => `
-<section style="display:flex;align-items:flex-start;gap:${gap};margin-bottom:${rowSpacing};">
-  <span style="flex-shrink:0;width:5px;height:5px;border-radius:50%;background:${t.primaryLight};margin-top:${markerTop};font-size:0;line-height:0;overflow:hidden;">${span(".")}</span>
+<section style="display:flex;align-items:flex-start;margin-bottom:${rowSpacing};">
+  <span style="flex-shrink:0;width:5px;height:5px;border-radius:50%;background:${t.primaryLight};margin-top:${markerTop};margin-right:${gap};font-size:0;line-height:0;overflow:hidden;">${span(".")}</span>
   <p style="margin:0;font-size:${t.bodySize}px;color:${t.text};line-height:${t.lineHeight};flex:1;">${item}</p>
 </section>`
     )
@@ -283,9 +283,9 @@ export function list(items: string[], ordered?: boolean): string {
 export function divider(): string {
   const t = DESIGN_TOKENS
   return `
-<section style="margin:44px 20px;display:flex;align-items:center;justify-content:center;gap:14px;">
-  <span style="display:inline-block;width:48px;height:1px;background:${t.divider};font-size:0;line-height:0;overflow:hidden;">${span("—")}</span>
-  <span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${t.primaryLight};font-size:0;line-height:0;overflow:hidden;opacity:0.6;">${span("·")}</span>
+<section style="margin:44px 20px;display:flex;align-items:center;justify-content:center;">
+  <span style="display:inline-block;width:48px;height:1px;background:${t.divider};font-size:0;line-height:0;overflow:hidden;margin-right:14px;">${span("—")}</span>
+  <span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${t.primaryLight};font-size:0;line-height:0;overflow:hidden;opacity:0.6;margin-right:14px;">${span("·")}</span>
   <span style="display:inline-block;width:48px;height:1px;background:${t.divider};font-size:0;line-height:0;overflow:hidden;">${span("—")}</span>
 </section>`
 }
@@ -300,7 +300,7 @@ export function colorPalette(
     .map((c) => {
       const hex = c.hex.trim().toUpperCase()
       return `
-<section style="background:${t.bg};border-radius:10px;overflow:hidden;border:1px solid ${t.divider};box-shadow:0 2px 8px -4px rgba(46,35,51,0.08);">
+<section style="background:${t.bg};border-radius:10px;overflow:hidden;border:1px solid ${t.divider};box-shadow:0 2px 8px -4px rgba(46,35,51,0.08);margin-right:12px;margin-bottom:12px;">
   <section style="height:72px;background:${hex};"></section>
   <section style="padding:12px;">
     <p style="margin:0;font-family:${t.titleFont};font-size:14px;font-weight:700;color:${t.title};line-height:1.4;">${span(c.name)}</p>
@@ -315,7 +315,7 @@ export function colorPalette(
 <section style="margin:0 0 28px;padding:20px;background:${t.paper};border-radius:12px;">
   <p style="font-size:10px;font-weight:700;color:${t.muted};letter-spacing:2px;margin:0 0 12px;text-transform:uppercase;">${span("COLOR PALETTE")}</p>
   <h4 style="font-family:${t.titleFont};font-size:16px;font-weight:700;color:${t.title};margin:0 0 18px;line-height:1.4;">${span(title)}</h4>
-  <section style="display:flex;flex-wrap:wrap;gap:12px;">
+  <section style="display:flex;flex-wrap:wrap;">
     ${swatches}
   </section>
 </section>`
