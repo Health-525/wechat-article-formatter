@@ -60,8 +60,8 @@ export function chapterTitle(
   const chapterLabel = number === "∞" ? label : `${label} ${number}`
   return `
 <section style="margin-top:${marginTop};margin-bottom:32px;padding:0 20px;">
-  <section style="display:flex;align-items:stretch;gap:14px;">
-    <section style="width:2px;background:${t.primary};border-radius:1px;flex-shrink:0;">${span("<br>")}</section>
+  <section style="display:flex;align-items:stretch;">
+    <section style="width:2px;background:${t.primary};border-radius:1px;flex-shrink:0;margin-right:14px;">${span("<br>")}</section>
     <section style="flex:1;">
       <p style="font-size:10px;font-weight:600;color:${t.primary};letter-spacing:2.5px;margin:0 0 6px;text-transform:uppercase;opacity:0.85;">${span(chapterLabel)}</p>
       <h2 style="font-family:${t.titleFont};font-size:23px;font-weight:700;color:${t.title};margin:0;line-height:1.4;letter-spacing:0.6px;">${span(title)}</h2>
@@ -93,14 +93,14 @@ export function underline(text: string): string {
 
 export function highlight(text: string): string {
   const t = DESIGN_TOKENS
-  return `<span style="background:${t.highlightBg};color:${t.title};padding:1px 4px;border-radius:3px;font-weight:600;box-decoration-break:clone;-webkit-box-decoration-break:clone;">${span(text)}</span>`
+  return `<span style="background:${t.highlightBg};color:${t.title};padding:1px 4px;border-radius:3px;font-weight:600;">${span(text)}</span>`
 }
 
 export function quoteBox(children: string): string {
   const t = DESIGN_TOKENS
   return `
-<section style="margin:0 0 32px;padding:24px 24px 24px 28px;background:linear-gradient(135deg,${t.paper} 0%,${t.bg} 100%);border:1px solid ${t.divider};border-radius:12px;display:flex;gap:16px;">
-  <section style="width:4px;flex-shrink:0;border-radius:2px;background:${t.primary};min-height:36px;opacity:0.9;">${span("<br>")}</section>
+<section style="margin:0 0 32px;padding:24px 24px 24px 28px;background:linear-gradient(135deg,${t.paper} 0%,${t.bg} 100%);border:1px solid ${t.divider};border-radius:12px;display:flex;">
+  <section style="width:4px;flex-shrink:0;border-radius:2px;background:${t.primary};min-height:36px;opacity:0.9;margin-right:16px;">${span("<br>")}</section>
   <section style="flex:1;">
     <p style="font-family:${t.titleFont};font-size:15px;color:${t.title};margin:0;line-height:1.85;letter-spacing:0.4px;font-style:italic;">
       <span style="color:${t.primary};font-size:20px;font-family:${t.titleFont};line-height:0;vertical-align:-5px;margin-right:5px;opacity:0.5;">${span("“")}</span>${children}
@@ -203,7 +203,7 @@ export function cover(
     ? `<p style="font-family:${t.titleFont};font-size:16px;font-weight:500;color:${t.primary};margin:14px 0 0;letter-spacing:0.5px;line-height:1.5;">${span(titleHighlight)}</p>`
     : ""
   const subtitleBlock = subtitle
-    ? `<p style="font-size:15px;color:${t.secondary};margin:18px auto 0;line-height:1.8;max-width:520px;">${subtitle}</p>`
+    ? `<p style="font-size:15px;color:${t.secondary};margin:18px auto 0;line-height:1.8;max-width:520px;">${span(subtitle)}</p>`
     : ""
   const imageBlock = image
     ? `<section style="margin:32px 0 0;padding:0 4px;"><img src="${image}" alt="封面图" style="max-width:100%;height:auto;display:block;margin:0 auto;border-radius:12px;border:1px solid ${t.divider};box-shadow:0 8px 24px -12px rgba(30,46,51,0.18);"></section>`
@@ -231,10 +231,10 @@ export function toc(chapters: Array<{ number: string; title: string }>): string 
       const isConc = isLast && isConclusionTitle(chapter.title)
       const num = isConc ? "∞" : chapter.number
       return `
-<section style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:${isLast ? "none" : `1px solid ${t.divider}`};">
-  <span style="font-family:${t.titleFont};font-size:13px;font-weight:600;color:${t.primaryLight};min-width:32px;text-align:right;letter-spacing:0.5px;">${span(num)}</span>
-  <span style="width:4px;height:4px;border-radius:50%;background:${t.accent};flex-shrink:0;font-size:0;line-height:0;overflow:hidden;">${span(".")}</span>
-  <span style="font-size:14px;font-weight:500;color:${t.title};line-height:1.5;flex:1;">${span(chapter.title)}</span>
+<section style="display:flex;align-items:center;padding:10px 0;border-bottom:${isLast ? "none" : `1px solid ${t.divider}`};">
+  <span style="font-family:${t.titleFont};font-size:13px;font-weight:600;color:${t.primaryLight};min-width:32px;text-align:right;letter-spacing:0.5px;margin-right:12px;">${span(num)}</span>
+  <span style="width:4px;height:4px;border-radius:50%;background:${t.accent};flex-shrink:0;font-size:0;line-height:0;overflow:hidden;margin-right:12px;">${span(".")}</span>
+  <span style="font-size:14px;font-weight:500;color:${t.title};line-height:1.5;flex:1;margin-right:12px;">${span(chapter.title)}</span>
   <span style="font-family:${t.titleFont};font-size:12px;color:${t.muted};">${span("→")}</span>
 </section>`
     })
@@ -260,7 +260,6 @@ export function subheading(title: string): string {
 
 export function list(items: string[], ordered?: boolean): string {
   const t = DESIGN_TOKENS
-  const gap = ordered ? "14px" : "12px"
   const rowSpacing = "16px"
   const markerTop = ordered ? "3px" : "10px"
 
@@ -268,8 +267,8 @@ export function list(items: string[], ordered?: boolean): string {
     const rows = items
       .map(
         (item, index) => `
-<section style="display:flex;align-items:flex-start;gap:${gap};margin-bottom:${rowSpacing};">
-  <span style="flex-shrink:0;width:22px;height:22px;line-height:22px;text-align:center;background:${t.paper};border:1px solid ${t.divider};border-radius:50%;font-family:${t.titleFont};font-size:11px;font-weight:700;color:${t.primary};margin-top:${markerTop};">${span(String(index + 1))}</span>
+<section style="display:flex;align-items:flex-start;margin-bottom:${rowSpacing};">
+  <span style="flex-shrink:0;width:22px;height:22px;line-height:22px;text-align:center;background:${t.paper};border:1px solid ${t.divider};border-radius:50%;font-family:${t.titleFont};font-size:11px;font-weight:700;color:${t.primary};margin-top:${markerTop};margin-right:14px;">${span(String(index + 1))}</span>
   <p style="margin:0;font-size:${t.bodySize}px;color:${t.text};line-height:${t.lineHeight};flex:1;">${item}</p>
 </section>`
       )
@@ -280,8 +279,8 @@ export function list(items: string[], ordered?: boolean): string {
   const rows = items
     .map(
       (item) => `
-<section style="display:flex;align-items:flex-start;gap:${gap};margin-bottom:${rowSpacing};">
-  <span style="flex-shrink:0;width:5px;height:5px;border-radius:50%;background:${t.primaryLight};margin-top:${markerTop};font-size:0;line-height:0;overflow:hidden;">${span(".")}</span>
+<section style="display:flex;align-items:flex-start;margin-bottom:${rowSpacing};">
+  <span style="flex-shrink:0;width:5px;height:5px;border-radius:50%;background:${t.primaryLight};margin-top:${markerTop};margin-right:12px;font-size:0;line-height:0;overflow:hidden;">${span(".")}</span>
   <p style="margin:0;font-size:${t.bodySize}px;color:${t.text};line-height:${t.lineHeight};flex:1;">${item}</p>
 </section>`
     )
@@ -292,9 +291,9 @@ export function list(items: string[], ordered?: boolean): string {
 export function divider(): string {
   const t = DESIGN_TOKENS
   return `
-<section style="margin:44px 20px;display:flex;align-items:center;justify-content:center;gap:14px;">
-  <span style="display:inline-block;width:48px;height:1px;background:${t.divider};font-size:0;line-height:0;overflow:hidden;">${span("—")}</span>
-  <span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${t.primaryLight};font-size:0;line-height:0;overflow:hidden;opacity:0.6;">${span("·")}</span>
+<section style="margin:44px 20px;display:flex;align-items:center;justify-content:center;">
+  <span style="display:inline-block;width:48px;height:1px;background:${t.divider};font-size:0;line-height:0;overflow:hidden;margin-right:14px;">${span("—")}</span>
+  <span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${t.primaryLight};font-size:0;line-height:0;overflow:hidden;opacity:0.6;margin-right:14px;">${span("·")}</span>
   <span style="display:inline-block;width:48px;height:1px;background:${t.divider};font-size:0;line-height:0;overflow:hidden;">${span("—")}</span>
 </section>`
 }
