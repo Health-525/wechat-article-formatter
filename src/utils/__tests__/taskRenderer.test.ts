@@ -14,7 +14,7 @@ describe("taskRenderer", () => {
     expect(prepared).not.toContain(":::task")
   })
 
-  it("renders an animated task card", () => {
+  it("renders a WeChat-safe static task card", () => {
     const html = renderTaskBlock({
       id: "test",
       items: [
@@ -24,9 +24,11 @@ describe("taskRenderer", () => {
     })
     expect(html).toContain("任务清单")
     expect(html).toContain("已完成 1 / 2")
-    expect(html).toContain("mopai-task-progress")
     expect(html).toContain("Step 1")
     expect(html).toContain("Step 2")
+    expect(html).not.toContain("<style>")
+    expect(html).not.toContain("@keyframes")
+    expect(html).not.toContain("animation:")
   })
 
   it("injects rendered blocks back into HTML", () => {

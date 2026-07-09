@@ -46,6 +46,15 @@ describe("markdownParser", () => {
       expect(html).toContain("Title")
     })
 
+    it("renders math as WeChat-safe SVG images for classic themes", () => {
+      const html = renderMarkdownToHtml("$x^2$", "minimal-white")
+      expect(html).toContain("latex.codecogs.com")
+      expect(html).toContain("<img")
+      expect(html).not.toContain("<style>")
+      expect(html).not.toContain('class="katex')
+      expect(html).not.toContain("position:absolute")
+    })
+
     it("renders complex gzh-design output with sections, numbering, and leaf spans", () => {
       const md = `## 标题一\n\n这是一段测试文字，包含**加粗**和\`行内代码\`。\n\n\`\`\`typescript\nconst x = 1;\nfunction hello() {\n  return world;\n}\n\`\`\`\n\n![示例图片](https://example.com/img.jpg)\n\n---\n\n## 总结\n\n第二段文字在这里。`
       const html = renderMarkdownToHtml(md, "moyu-green")

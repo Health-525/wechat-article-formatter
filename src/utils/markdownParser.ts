@@ -1,6 +1,5 @@
 import { marked } from "marked"
-import { katexCss } from "./katexCss"
-import { extractMath, injectRenderedMath } from "./mathRenderer"
+import { extractMathSvg, injectRenderedMathSvg } from "./mathSvgRenderer"
 import { extractTaskBlocks, injectTaskBlocks } from "./taskRenderer"
 import { themes, type Theme } from "./themes"
 import { renderGzhDesignMarkdown } from "./gzhDesign/renderer"
@@ -381,14 +380,16 @@ export function renderMarkdownToHtml(markdown: string, themeId: string = "minima
   // 1. Extract animated task blocks and replace with placeholders
   const { prepared: taskPrepared, blocks } = extractTaskBlocks(markdown)
 
-  // 2. Extract LaTeX math expressions and replace with placeholders
-  const { prepared, snippets } = extractMath(taskPrepared)
+  // 2. Extract LaTeX math expressions and replace with placeholders.
+  //    Use SVG images instead of KaTeX HTML: WeChat strips KaTeX's class
+  //    attributes, <style> tags and position:absolute rules.
+  const { prepared, snippets } = extractMathSvg(taskPrepared)
 
   // 3. Parse markdown to HTML
   let html = marked.parse(prepared) as string
 
-  // 4. Replace placeholders with rendered KaTeX HTML
-  html = injectRenderedMath(html, snippets)
+  // 4. Replace placeholders with WeChat-safe SVG formula images
+  html = injectRenderedMathSvg(html, snippets)
 
   // 5. Replace placeholders with animated task cards
   html = injectTaskBlocks(html, blocks)
@@ -410,14 +411,8 @@ export function renderMarkdownToHtml(markdown: string, themeId: string = "minima
   // 9. Wrap text nodes with <span leaf=""> for WeChat paste safety
   html = wrapTextNodesWithLeaf(html)
 
-  // 10. Inject KaTeX CSS so formulas render correctly.
-  //    Note: WeChat may strip <style> tags; for full WeChat compatibility,
-  //    formulas should be verified after paste. The style tag is included
-  //    so exported HTML and browser preview work perfectly.
-  const mathStyles = snippets.length > 0 ? `<style>${katexCss}</style>` : ""
-
-  // 11. Wrap in <section> container (NOT <div> — WeChat filters div!)
-  html = `<section style="${s.container}">${mathStyles}${html}</section>`
+  // 10. Wrap in <section> container (NOT <div> — WeChat filters div!)
+  html = `<section style="${s.container}">${html}</section>`
 
   return html
 }
@@ -535,20 +530,20 @@ export function validateWeChatHtml(html: string): WeChatValidationResult {
   const warnings: string[] = []
 
   const forbidden = [
-    { rx: /<style[\s>]/i, msg: "<style> 标签会被过滤，样式必须内联" },
-    { rx: /<script[\s>]/i, msg: "<script> 标签会被过滤" },
-    { rx: /<\/ ?div[\s>]/i, msg: "<div> 会被改写，请用 <section>" },
-    { rx: /<link[\s>]/i, msg: "外部 <link>（CSS/字体）会被过滤" },
-    { rx: /\sclass\s*=/i, msg: "class 属性会被剥离，请用内联 style" },
-    { rx: /\sid\s*=/i, msg: "id 属性会被剥离" },
-    { rx: /position\s*:\s*(fixed|absolute|sticky)/i, msg: "position fixed/absolute/sticky 不被支持" },
-    { rx: /float\s*:/i, msg: "float 不被支持" },
-    { rx: /@media/i, msg: "@media 媒体查询不被支持" },
-    { rx: /@keyframes/i, msg: "@keyframes 动画不被支持" },
-    { rx: /@import/i, msg: "@import 不被支持" },
-    { rx: /display\s*:\s*grid/i, msg: "display:grid 不被支持，请用 flex" },
-    { rx: /var\s*\(\s*--/i, msg: "CSS 变量 var(--x) 不被支持，请写死值" },
-    { rx: /url\s*\(\s*['"]?https?:\/\/[^)]*\.(woff2?|ttf|otf|eot)/i, msg: "外部字体不被支持" },
+    { rx: /<style[\s>]/gi, msg: "<style> 标签会被过滤，样式必须内联" },
+    { rx: /<script[\s>]/gi, msg: "<script> 标签会被过滤" },
+    { rx: /<\/ ?div[\s>]/gi, msg: "<div> 会被改写，请用 <section>" },
+    { rx: /<link[\s>]/gi, msg: "外部 <link>（CSS/字体）会被过滤" },
+    { rx: /\sclass\s*=/gi, msg: "class 属性会被剥离，请用内联 style" },
+    { rx: /\sid\s*=/gi, msg: "id 属性会被剥离" },
+    { rx: /position\s*:\s*(fixed|absolute|sticky)/gi, msg: "position fixed/absolute/sticky 不被支持" },
+    { rx: /float\s*:/gi, msg: "float 不被支持" },
+    { rx: /@media/gi, msg: "@media 媒体查询不被支持" },
+    { rx: /@keyframes/gi, msg: "@keyframes 动画不被支持" },
+    { rx: /@import/gi, msg: "@import 不被支持" },
+    { rx: /display\s*:\s*grid/gi, msg: "display:grid 不被支持，请用 flex" },
+    { rx: /var\s*\(\s*--/gi, msg: "CSS 变量 var(--x) 不被支持，请写死值" },
+    { rx: /url\s*\(\s*['"]?https?:\/\/[^)]*\.(woff2?|ttf|otf|eot)/gi, msg: "外部字体不被支持" },
   ]
 
   forbidden.forEach(({ rx, msg }) => {
