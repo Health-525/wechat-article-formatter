@@ -787,7 +787,7 @@ const t12 = createTheme(
     table: "width:100%;border-collapse:collapse;margin:18px 0;font-size:14px;border:1px solid #e0c8a0;background:#ffffff;",
     th: "padding:12px 16px;background:#f5e6d3;border-bottom:2px solid #c4956a;text-align:center;font-weight:700;color:#b22222;font-family:'Noto Serif SC',serif;font-size:13px;letter-spacing:1px;",
     td: "padding:12px 16px;border-bottom:1px solid #f0dcc8;color:#5c1a1a;text-align:center;",
-    hr: "border:none;height:2px;background:repeating-linear-gradient(90deg,#c4956a,#c4956a 10px,transparent 10px,transparent 20px);margin:32px 0;",
+    hr: "border:0;border-top:2px dashed #c4956a;height:0;margin:32px 0;",
   }
 )
 
