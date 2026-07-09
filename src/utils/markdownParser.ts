@@ -65,7 +65,7 @@ function unescapeHtml(text: string): string {
  * This is the single most important WeChat paste-safety measure:
  * without it, the editor can strip or rewrite inline styles.
  */
-function wrapTextNodesWithLeaf(html: string): string {
+export function wrapTextNodesWithLeaf(html: string): string {
   if (typeof document === "undefined") {
     return wrapTextNodesWithLeafRegex(html)
   }
@@ -77,7 +77,14 @@ function wrapTextNodesWithLeaf(html: string): string {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent || ""
       if (!text.trim()) return
-      const span = document.createElement("span")
+      // Text already directly inside a <span leaf=""> does not need to be
+      // re-wrapped, but we still want to recurse into any nested elements
+      // (e.g. KaTeX spans) and wrap their text nodes.
+      const parent = node.parentElement
+      if (parent && parent.tagName.toLowerCase() === "span" && parent.hasAttribute("leaf")) {
+        return
+      }
+      const span = doc.createElement("span")
       span.setAttribute("leaf", "")
       span.textContent = text
       node.parentNode?.replaceChild(span, node)
@@ -88,7 +95,6 @@ function wrapTextNodesWithLeaf(html: string): string {
       const el = node as Element
       const tag = el.tagName.toLowerCase()
       if (tag === "script" || tag === "style") return
-      if (tag === "span" && el.hasAttribute("leaf")) return
       Array.from(el.childNodes).forEach((child) => walk(child))
     }
   }
@@ -131,8 +137,11 @@ function wrapTextNodesWithLeafRegex(html: string): string {
       }
     } else {
       const inSkip = stack.some((s) => skipTags.has(s.tag))
-      const inLeaf = stack.some((s) => s.leaf)
-      if (inSkip || inLeaf || !part.trim()) {
+      // Only skip text that is a direct child of <span leaf="">. Nested
+      // elements (e.g. KaTeX spans) inside a leaf span still need wrapping.
+      const top = stack[stack.length - 1]
+      const inLeafDirectly = top?.leaf === true
+      if (inSkip || inLeafDirectly || !part.trim()) {
         result += part
       } else {
         result += `<span leaf="">${part}</span>`
@@ -374,7 +383,10 @@ export function renderMarkdownToHtml(markdown: string, themeId: string = "minima
 
   // gzh-design theme: use the full component-based renderer for authentic output.
   if (GZH_DESIGN_THEMES.has(themeId)) {
-    return renderGzhDesignMarkdown(markdown, themeId)
+    let html = renderGzhDesignMarkdown(markdown, themeId)
+    // Make sure every text node is wrapped with <span leaf=""> for paste safety.
+    html = wrapTextNodesWithLeaf(html)
+    return html
   }
 
   // 1. Extract animated task blocks and replace with placeholders
