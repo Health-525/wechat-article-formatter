@@ -94,7 +94,7 @@ export function quoteBox(children: string): string {
   return `
 <section style="margin-top:24px;">
   <section style="background:${t.bg};border:1px solid ${t.divider};border-radius:6px;overflow:hidden;">
-    <section style="padding:10px 16px;background:${t.primary};display:flex;align-items:center;justify-content:space-between;gap:10px;">
+    <section style="padding:10px 16px;background:${t.primary};display:flex;align-items:center;justify-content:space-between;">
       <p style="margin:0;font-size:10px;font-weight:800;letter-spacing:2px;color:#ffffff;">${span("EDITOR'S NOTE")}</p>
     </section>
     <section style="padding:16px 18px 18px;background:${t.bgOlive};">
@@ -196,13 +196,7 @@ export function cover(
         <img src="${image}" alt="封面图" style="max-width:100%;height:auto;display:block;border-radius:4px;">
       </section>`
     : `<section style="flex-shrink:0;width:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:${t.bgOlive};border:1px dashed ${t.divider};border-radius:6px;padding:8px;">
-        <svg width="72" height="72" viewBox="0 0 64 64" aria-hidden="true" style="display:block;">
-          <ellipse cx="32" cy="36" rx="22" ry="18" fill="none" stroke="${t.text}" stroke-width="2"></ellipse>
-          <circle cx="26" cy="30" r="3" fill="${t.text}"></circle>
-          <circle cx="38" cy="30" r="3" fill="${t.text}"></circle>
-          <path d="M28 40 Q32 44 36 40" fill="none" stroke="${t.text}" stroke-width="1.5"></path>
-          <path d="M12 34 L8 28 M52 34 L56 28" stroke="${t.divider}" stroke-width="2" stroke-linecap="round"></path>
-        </svg>
+        <span style="font-size:40px;line-height:1;">${span("🫒")}</span>
         <span style="font-size:8px;font-weight:700;color:${t.helper};letter-spacing:1px;margin-top:4px;">${span("DOODLE")}</span>
       </section>`
 
@@ -215,11 +209,11 @@ export function cover(
     : span(title)
 
   const summaryBar = summary
-    ? `<section style="background:${t.primary};padding:11px 24px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-    <p style="font-size:12px;color:rgba(255,255,255,0.92);margin:0;font-weight:600;">${span(summary)}</p>
-    <section style="display:flex;gap:6px;flex-wrap:wrap;">
-      ${tag1 ? `<span style="background:${t.labelBg};color:${t.title};padding:3px 8px;border-radius:4px;font-size:8px;font-weight:700;border:1px solid ${t.divider};">${span(tag1)}</span>` : ""}
-      ${tag2 ? `<span style="background:${t.labelBg};color:${t.title};padding:3px 8px;border-radius:4px;font-size:8px;font-weight:700;border:1px solid ${t.divider};">${span(tag2)}</span>` : ""}
+    ? `<section style="background:${t.primary};padding:11px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;">
+    <p style="font-size:12px;color:rgba(255,255,255,0.92);margin:0 12px 0 0;font-weight:600;">${span(summary)}</p>
+    <section style="display:flex;flex-wrap:wrap;">
+      ${tag1 ? `<span style="background:${t.labelBg};color:${t.title};padding:3px 8px;border-radius:4px;font-size:8px;font-weight:700;border:1px solid ${t.divider};margin:0 3px;">${span(tag1)}</span>` : ""}
+      ${tag2 ? `<span style="background:${t.labelBg};color:${t.title};padding:3px 8px;border-radius:4px;font-size:8px;font-weight:700;border:1px solid ${t.divider};margin:0 3px;">${span(tag2)}</span>` : ""}
     </section>
   </section>`
     : ""
@@ -227,18 +221,18 @@ export function cover(
   return `
 <section style="background:${t.bg};border:1px solid ${t.divider};border-radius:6px;overflow:hidden;font-family:${t.fontStack};">
   <section style="padding:28px 24px 22px;">
-    <section style="display:flex;align-items:center;gap:8px;margin-bottom:22px;">
-      <span style="width:8px;height:8px;background:${t.primary};border-radius:50%;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
-      <span style="font-size:10px;font-weight:700;letter-spacing:3px;color:${t.muted};">${span(coverTag)}</span>
-      <span style="flex:1;height:1px;background:${t.divider};display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
-      <span style="font-size:10px;color:${t.helper};font-weight:500;font-variant-numeric:tabular-nums;">${span(coverDate)}</span>
+    <section style="display:flex;align-items:center;margin-bottom:22px;">
+      <span style="width:8px;height:8px;background:${t.primary};border-radius:50%;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin-right:8px;">${span("<br>")}</span>
+      <span style="font-size:10px;font-weight:700;letter-spacing:3px;color:${t.muted};margin-right:8px;">${span(coverTag)}</span>
+      <span style="flex:1;height:1px;background:${t.divider};display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin-right:8px;">${span("<br>")}</span>
+      <span style="font-size:10px;color:${t.helper};font-weight:500;">${span(coverDate)}</span>
     </section>
-    <section style="display:flex;align-items:stretch;gap:18px;">
-      <section style="flex:1;min-width:0;">
+    <section style="display:flex;align-items:stretch;">
+      <section style="flex:1;min-width:0;margin-right:18px;">
         ${oldBeliefLine}
         <p style="font-size:24px;font-weight:800;color:${t.title};margin:0 0 10px;line-height:1.15;letter-spacing:-0.75px;">${titleLine}</p>
-        <section style="display:flex;align-items:center;gap:4px;margin-bottom:12px;">
-          <span style="width:22px;height:3px;background:${t.primary};border-radius:2px;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
+        <section style="display:flex;align-items:center;margin-bottom:12px;">
+          <span style="width:22px;height:3px;background:${t.primary};border-radius:2px;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin-right:4px;">${span("<br>")}</span>
           <span style="width:8px;height:3px;background:${t.divider};border-radius:2px;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
         </section>
         <p style="font-size:13px;color:${t.muted};margin:0;line-height:1.7;">${span(subtitle)}</p>
@@ -261,12 +255,12 @@ export function toc(chapters: Array<{ number: string; title: string }>): string 
       const badge = isConc ? "///" : chapter.number
       const partLabel = isConc ? "END" : "CHAPTER"
       return `
-      <section style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:${isLast ? "none" : `1px solid ${t.divider}`};">
-        <section style="text-align:center;flex-shrink:0;width:46px;">
+      <section style="display:flex;align-items:center;padding:12px 0;border-bottom:${isLast ? "none" : `1px solid ${t.divider}`};">
+        <section style="text-align:center;flex-shrink:0;width:46px;margin-right:12px;">
           <p style="margin:0;font-size:18px;font-weight:800;color:${t.title};line-height:1;letter-spacing:-1px;">${span(badge)}</p>
           <p style="margin:2px 0 0;font-size:7px;font-weight:700;color:${t.helper};letter-spacing:1.5px;">${span(partLabel)}</p>
         </section>
-        <span style="width:1px;height:28px;background:${t.divider};flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
+        <span style="width:1px;height:28px;background:${t.divider};flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin-right:12px;">${span("<br>")}</span>
         <p style="margin:0;font-size:14px;font-weight:600;color:${t.text};line-height:1.5;">${span(chapter.title)}</p>
       </section>`
     })
@@ -275,8 +269,8 @@ export function toc(chapters: Array<{ number: string; title: string }>): string 
   return `
 <section style="margin-top:24px;">
   <section style="background:${t.bg};border:1px solid ${t.divider};border-radius:6px;padding:18px 20px;font-family:${t.fontStack};">
-    <section style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <span style="width:6px;height:6px;background:${t.primary};border-radius:50%;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
+    <section style="display:flex;align-items:center;margin-bottom:8px;">
+      <span style="width:6px;height:6px;background:${t.primary};border-radius:50%;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin-right:8px;">${span("<br>")}</span>
       <p style="margin:0;font-size:10px;font-weight:800;letter-spacing:3px;color:${t.muted};">${span("本期目录")}</p>
     </section>
     ${items}
@@ -288,8 +282,8 @@ export function subheading(title: string): string {
   const t = DESIGN_TOKENS
   return `
 <section style="margin-top:24px;">
-  <section style="display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid ${t.divider};padding-bottom:10px;font-family:${t.fontStack};">
-    <span style="width:3px;height:22px;background:${t.accent};border-radius:2px;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
+  <section style="display:flex;align-items:flex-start;border-bottom:1px solid ${t.divider};padding-bottom:10px;font-family:${t.fontStack};">
+    <span style="width:3px;height:22px;background:${t.accent};border-radius:2px;flex-shrink:0;display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin-right:12px;">${span("<br>")}</span>
     <section style="flex:1;min-width:0;">
       <span style="font-size:10px;font-weight:800;letter-spacing:3px;color:${t.accent};text-transform:uppercase;">${span("SUB")}</span>
       <h3 style="font-size:18px;font-weight:800;color:${t.title};margin:4px 0 0;line-height:1.2;">${span(title)}</h3>
@@ -322,22 +316,22 @@ export function list(items: string[], ordered?: boolean): string {
 </section>`
   }
 
-  const lis = items
+  const rows = items
     .map(
       (item) =>
         `
-      <li style="margin-bottom:8px;font-size:15px;color:${t.text};list-style-type:disc;">
-        <section>${span(item)}</section>
-      </li>`
+      <section style="margin-bottom:8px;line-height:1.8;">
+        <p style="margin:0;font-size:15px;color:${t.text};">
+          <span style="display:inline-block;width:18px;flex-shrink:0;color:${t.title};font-weight:700;">${span("•")}</span>${span(item)}
+        </p>
+      </section>`
     )
     .join("")
 
   return `
 <section style="margin-top:24px;">
   <section style="font-family:${t.fontStack};">
-    <ul style="margin:0;padding-left:22px;line-height:1.8;list-style-position:outside;">
-      ${lis}
-    </ul>
+    ${rows}
   </section>
 </section>`
 }
@@ -346,10 +340,10 @@ export function divider(): string {
   const t = DESIGN_TOKENS
   return `
 <section style="margin-top:24px;">
-  <section style="display:flex;align-items:center;justify-content:center;gap:10px;font-family:${t.fontStack};">
-    <span style="width:8px;height:8px;border-radius:50%;background:${t.text};display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
-    <span style="width:8px;height:8px;border-radius:50%;background:${t.divider};display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
-    <span style="width:8px;height:8px;border-radius:50%;background:${t.accent};display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;">${span("<br>")}</span>
+  <section style="display:flex;align-items:center;justify-content:center;font-family:${t.fontStack};">
+    <span style="width:8px;height:8px;border-radius:50%;background:${t.text};display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin:0 5px;">${span("<br>")}</span>
+    <span style="width:8px;height:8px;border-radius:50%;background:${t.divider};display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin:0 5px;">${span("<br>")}</span>
+    <span style="width:8px;height:8px;border-radius:50%;background:${t.accent};display:inline-block;overflow:hidden;vertical-align:middle;font-size:0;line-height:0;margin:0 5px;">${span("<br>")}</span>
   </section>
 </section>`
 }
@@ -358,8 +352,8 @@ export function stepHeading(title: string, step = "STEP 01"): string {
   const t = DESIGN_TOKENS
   return `
 <section style="margin-top:24px;">
-  <section style="display:flex;align-items:center;gap:10px;font-family:${t.fontStack};">
-    <span style="background:${t.primary};color:#fff;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;">${span(step)}</span>
+  <section style="display:flex;align-items:center;font-family:${t.fontStack};">
+    <span style="background:${t.primary};color:#fff;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:700;margin-right:10px;">${span(step)}</span>
     <span style="font-size:14px;font-weight:600;color:${t.text};">${span(title)}</span>
   </section>
 </section>`
@@ -368,13 +362,13 @@ export function stepHeading(title: string, step = "STEP 01"): string {
 export function kickerTitle(kicker: string, title: string, progress = ""): string {
   const t = DESIGN_TOKENS
   const progressHtml = progress
-    ? `<span style="margin-left:auto;font-size:10px;color:${t.helper};font-variant-numeric:tabular-nums;">${span(progress)}</span>`
+    ? `<span style="margin-left:auto;font-size:10px;color:${t.helper};">${span(progress)}</span>`
     : ""
   return `
 <section style="margin-top:24px;">
-  <section style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:1px solid ${t.divider};padding-bottom:10px;font-family:${t.fontStack};">
-    <span style="font-size:10px;font-weight:800;letter-spacing:3px;color:${t.accent};text-transform:uppercase;">${span(kicker)}</span>
-    <span style="font-size:18px;font-weight:800;color:${t.title};line-height:1.2;">${span(title)}</span>
+  <section style="display:flex;align-items:flex-end;flex-wrap:wrap;border-bottom:1px solid ${t.divider};padding-bottom:10px;font-family:${t.fontStack};">
+    <span style="font-size:10px;font-weight:800;letter-spacing:3px;color:${t.accent};text-transform:uppercase;margin-right:12px;">${span(kicker)}</span>
+    <span style="font-size:18px;font-weight:800;color:${t.title};line-height:1.2;margin-right:12px;">${span(title)}</span>
     ${progressHtml}
   </section>
 </section>`
@@ -385,7 +379,7 @@ export function highlightTitle(title: string): string {
   return `
 <section style="margin-top:24px;">
   <section style="font-family:${t.fontStack};">
-    <h3 style="font-size:18px;font-weight:700;color:${t.title};margin:0;padding:0 2px;display:block;width:fit-content;box-shadow:inset 0 -0.5em 0 rgba(245,78,0,0.18);">${span(title)}</h3>
+    <h3 style="font-size:18px;font-weight:700;color:${t.title};margin:0;padding:0 2px;display:block;box-shadow:inset 0 -0.5em 0 rgba(245,78,0,0.18);">${span(title)}</h3>
   </section>
 </section>`
 }
